@@ -1,5 +1,7 @@
-// Función de Netlify: intermediario seguro entre la app y la IA.
-// La clave vive en Netlify (Site configuration > Environment variables > ANTHROPIC_API_KEY), nunca en el HTML.
+// Edge Function de Netlify: intermediario seguro entre la app y la IA.
+// Se usa Edge (y no una función normal) porque las funciones normales se cortan a los 10 segundos
+// y una respuesta completa tarda más. Aquí la respuesta se transmite en vivo, sin ese límite.
+// La clave vive en Netlify: Environment variables > ANTHROPIC_API_KEY. Nunca va en el HTML.
 
 const MODELO = "claude-sonnet-5"; // cámbialo aquí si quieres otro modelo
 
@@ -38,9 +40,13 @@ Reglas de cantidad: 3 a 5 versículos, 2 o 3 historias, 3 a 5 pasos, plan de 7 d
 Para "lugar" usa solo uno de estos ids: ${LUGARES}. Si la historia no ocurre en ninguno, usa null.
 Para "lamina": elige de este catálogo de grabados de Gustave Doré el número que corresponda EXACTAMENTE a la historia; si ninguno la representa, usa null (nunca pongas uno que no corresponda): ${LAMINAS}.`;
 
+const json = (obj, status = 200) => new Response(JSON.stringify(obj), { status, headers: { "Content-Type": "application/json; charset=utf-8" } });
+
 export default async (req) => {
-  const json = (obj, status = 200) => new Response(JSON.stringify(obj), { status, headers: { "Content-Type": "application/json" } });
+  if (req.method === "GET") return json({ ok: true, clave: Boolean(Netlify.env.get("ANTHROPIC_API_KEY")) });
   if (req.method !== "POST") return json({ error: "Usa POST" }, 405);
+  const clave = Netlify.env.get("ANTHROPIC_API_KEY");
+  if (!clave) return json({ error: "Falta la clave ANTHROPIC_API_KEY en Netlify (Environment variables). Después de agregarla, vuelve a publicar." }, 500);
 
   let consulta, modo;
   try { ({ consulta, modo } = await req.json()); } catch { return json({ error: "Cuerpo inválido" }, 400); }
@@ -50,27 +56,22 @@ export default async (req) => {
 
   const r = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
-    headers: {
-      "x-api-key": process.env.ANTHROPIC_API_KEY,
-      "anthropic-version": "2023-06-01",
-      "content-type": "application/json"
-    },
+    headers: { "x-api-key": clave, "anthropic-version": "2023-06-01", "content-type": "application/json" },
     body: JSON.stringify({
-      model: MODELO,
+      model: Netlify.env.get("ANTHROPIC_MODEL") || MODELO,
       max_tokens: 4000,
+      stream: true,
       system: SISTEMA,
       messages: [{ role: "user", content: `Modo: ${modo}\nSituación de la persona: ${consulta}` }]
     })
   });
-
-  if (!r.ok) return json({ error: "Error de la IA", detalle: await r.text() }, 502);
-  const data = await r.json();
-  const texto = (data.content || []).filter(b => b.type === "text").map(b => b.text).join("");
-  try {
-    const limpio = texto.replace(/```json|```/g, "").trim();
-    const inicio = limpio.indexOf("{"), fin = limpio.lastIndexOf("}");
-    return json(JSON.parse(limpio.slice(inicio, fin + 1)));
-  } catch {
-    return json({ error: "La IA no devolvió JSON válido" }, 502);
+  if (!r.ok) {
+    const t = await r.text(); let m = t;
+    try { m = JSON.parse(t).error?.message || t; } catch {}
+    return json({ error: m, estado: r.status }, 502);
   }
+  // Se reenvía el flujo de Anthropic tal cual; la app arma el texto a medida que llega
+  return new Response(r.body, { headers: { "Content-Type": "text/event-stream; charset=utf-8", "Cache-Control": "no-cache" } });
 };
+
+export const config = { path: "/api/consejo" };

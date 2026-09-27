@@ -469,7 +469,7 @@ $("#btnAjustes").onclick = () => {
     $("#elegirVoz").onchange = e => { ajustes.vozNombre = e.target.value; guardar("ajustes", ajustes); };
     $("#probarTelefono").onclick = () => { detener(); vozTelefono(SALUDO, ++sesionVoz); };
   }
-  fetch("/.netlify/functions/voz").then(r => r.ok ? r.json() : null).catch(() => null).then(d => {
+  fetch("/api/voz").then(r => r.ok ? r.json() : null).catch(() => null).then(d => {
     const el = $("#estadoVoz"); if (!el) return;
     el.textContent = d && d.configurada
       ? "La voz natural está activa."
@@ -518,7 +518,7 @@ async function audioGrabado(url, mi){
 }
 async function vozNatural(texto, mi){
   const trozos = partir(texto, 900);
-  const pedir = i => fetch("/.netlify/functions/voz", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ texto: trozos[i] }) })
+  const pedir = i => fetch("/api/voz", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ texto: trozos[i] }) })
     .then(r => r.ok ? r.blob() : Promise.reject(r.status));
   let siguiente = pedir(0);
   for (let i = 0; i < trozos.length; i++) {
@@ -583,6 +583,44 @@ $$("#ejemplos .chip").forEach(b => b.onclick = () => { $("#consulta").value = EJ
 
 const RIESGO = /(suicid|quitarme la vida|matarme|me quiero morir|no quiero vivir|hacerme da[ñn]o|cortarme|acabar con todo|me pega|me golpea|abus(o|a|aron)|violaci[oó]n|matar a|lo voy a matar)/i;
 
+// Pide el consejo y lo recibe en vivo (flujo de eventos de Anthropic reenviado por la Edge Function)
+async function pedirConsejo(texto){
+  const ctrl = new AbortController(), to = setTimeout(() => ctrl.abort(), 120000);
+  try {
+    const r = await fetch("/api/consejo", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ consulta:texto, modo }), signal: ctrl.signal });
+    if (!r.ok) { let m = "HTTP " + r.status; try { m = (await r.json()).error || m; } catch (e) {} throw new Error(m); }
+    const lector = r.body.getReader(), dec = new TextDecoder();
+    let buffer = "", salida = "";
+    for (;;) {
+      const { value, done } = await lector.read(); if (done) break;
+      buffer += dec.decode(value, { stream:true });
+      const lineas = buffer.split("\n"); buffer = lineas.pop();
+      for (const l of lineas) {
+        if (!l.startsWith("data:")) continue;
+        let ev; try { ev = JSON.parse(l.slice(5)); } catch (e) { continue; }
+        if (ev.type === "content_block_delta" && ev.delta && ev.delta.type === "text_delta") salida += ev.delta.text;
+        else if (ev.type === "error") throw new Error((ev.error && ev.error.message) || "Error de la IA");
+      }
+      const est = $("#resultado .estado"); if (est) est.textContent = `Escribiendo tu respuesta… ${Math.min(99, Math.round(salida.length / 60))}%`;
+    }
+    const limpio = salida.replace(/```json|```/g, "").trim();
+    const json = JSON.parse(limpio.slice(limpio.indexOf("{"), limpio.lastIndexOf("}") + 1));
+    if (!json || !Array.isArray(json.versiculos)) throw new Error("La IA respondió en un formato inesperado");
+    return json;
+  } finally { clearTimeout(to); }
+}
+function explicarError(m){
+  m = String(m || "");
+  if (/ANTHROPIC_API_KEY/.test(m)) return m;
+  if (/x-api-key|authentication|invalid.*key/i.test(m)) return "La clave de Anthropic no es válida. Revisa que la copiaste completa en Netlify y vuelve a publicar.";
+  if (/credit|balance|billing/i.test(m)) return "Tu cuenta de Anthropic no tiene saldo. Carga créditos en console.anthropic.com (Billing).";
+  if (/model/i.test(m)) return "El modelo de IA configurado no está disponible: " + m;
+  if (/overloaded|529/i.test(m)) return "La IA está muy ocupada en este momento. Intenta de nuevo en un minuto.";
+  if (/abort/i.test(m)) return "La respuesta tardó demasiado. Revisa tu señal e intenta de nuevo.";
+  if (/HTTP 404/.test(m)) return "No se encontró el servicio de la IA. Asegúrate de haber publicado la versión nueva desde GitHub.";
+  return "Detalle técnico: " + m;
+}
+
 async function consultar(){
   const texto = $("#consulta").value.trim();
   if (texto.length < 10) { toast("Escribe un poco más sobre tu situación"); $("#consulta").focus(); return; }
@@ -590,13 +628,17 @@ async function consultar(){
   $("#resultado").innerHTML = `<p class="estado">Buscando versículos, historias y la mirada de cada tradición…</p>`;
   let resp = null, demo = false;
   try {
-    const ctrl = new AbortController(), to = setTimeout(() => ctrl.abort(), 90000);
-    const r = await fetch("/.netlify/functions/consejo", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ consulta:texto, modo }), signal: ctrl.signal });
-    clearTimeout(to);
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    resp = await r.json();
-    if (!resp || !Array.isArray(resp.versiculos)) throw new Error("Formato inválido");
-  } catch (e) { console.warn("IA no disponible, se muestra el ejemplo:", e); resp = DEMO; demo = true; }
+    resp = await pedirConsejo(texto);
+  } catch (e) {
+    if (location.protocol === "file:") { resp = DEMO; demo = true; } // solo al abrir el archivo suelto
+    else {
+      $("#resultado").innerHTML = `<div class="crisis" role="alert"><h3>No se pudo consultar la IA</h3><p>${esc(explicarError(e.message))}</p>
+        <button class="btn ghost" id="btnReintentar">Intentar de nuevo</button></div>`;
+      $("#btnReintentar").onclick = consultar;
+      btn.disabled = false; btn.textContent = "Buscar consejo en las Escrituras";
+      return;
+    }
+  }
   if (RIESGO.test(texto)) resp = { ...resp, crisis:true };
   const entrada = { id: Date.now(), fecha: new Date().toISOString(), consulta: texto, resp, demo };
   $("#resultado").innerHTML = htmlRespuesta(resp, demo);

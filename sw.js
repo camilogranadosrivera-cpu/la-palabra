@@ -1,5 +1,5 @@
 // Service worker de La Palabra: la app abre al instante y funciona sin señal (menos la IA y la voz natural)
-const VERSION = "la-palabra-v1";
+const VERSION = "la-palabra-v2";
 const BASE = ["./", "index.html", "manifest.webmanifest", "iconos/icon-192.png", "iconos/icon-512.png"];
 
 self.addEventListener("install", e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(BASE))); self.skipWaiting(); });
@@ -9,7 +9,7 @@ self.addEventListener("activate", e => {
 });
 self.addEventListener("fetch", e => {
   const req = e.request, url = new URL(req.url);
-  if (req.method !== "GET" || url.pathname.startsWith("/.netlify/")) return; // la IA y la voz siempre van a la red
+  if (req.method !== "GET" || (url.pathname.startsWith("/.netlify/") || url.pathname.startsWith("/api/"))) return; // la IA y la voz siempre van a la red
   // Páginas: primero la red (para recibir actualizaciones), si no hay señal, la copia guardada
   if (req.mode === "navigate") {
     e.respondWith(fetch(req).then(r => { const c = r.clone(); caches.open(VERSION).then(k => k.put("index.html", c)); return r; })
