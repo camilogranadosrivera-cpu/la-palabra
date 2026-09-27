@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#EDE3CC">
+<title>La Palabra · Consejo bíblico</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="iconos/icon-192.png">
+<link rel="apple-touch-icon" href="iconos/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="La Palabra">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+Hebrew:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDE3CC; --surface:#F6EFDD; --surface2:#E0D3B5; --ink:#2B2118; --soft:#6A5A45; --line:rgba(43,33,24,.24);
+  --rojo:#8C1C13; --oro:#9C7A34; --on-rojo:#FBF3E2; --papel:#F8F1DF;
+  --fell:'IM Fell English',Georgia,serif; --sc:'IM Fell English SC','IM Fell English',Georgia,serif; --serif:'EB Garamond',Georgia,serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1C1712; --surface:#251E17; --surface2:#33291F; --ink:#EADFC8; --soft:#B3A58C; --line:rgba(234,223,200,.18);
+  --rojo:#E07A62; --oro:#D4B26A; --on-rojo:#1C1712;}}
+:root[data-theme="dark"]{
+  --bg:#1C1712; --surface:#251E17; --surface2:#33291F; --ink:#EADFC8; --soft:#B3A58C; --line:rgba(234,223,200,.18);
+  --rojo:#E07A62; --oro:#D4B26A; --on-rojo:#1C1712;}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;color:var(--ink);font-family:var(--serif);font-size:18.5px;line-height:1.6;-webkit-font-smoothing:antialiased;
+  background:var(--bg) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .27  0 0 0 0 .15  0 0 0 .07 0'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>")}
+button,textarea,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--rojo);outline-offset:3px}
+h1,h2,h3{font-family:var(--fell);font-weight:400;line-height:1.15;margin:0}
+h1{font-size:2.3rem}
+h3{font-size:1.4rem}
+p{margin:0 0 12px}
+.soft{color:var(--soft)}
+/* Encabezados de sección con filete y florón, como en las biblias impresas */
+h2{font-family:var(--sc);font-size:1.35rem;letter-spacing:.04em;text-align:center;margin:44px 0 18px;display:flex;align-items:center;gap:12px;color:var(--ink)}
+h2::before,h2::after{content:"";flex:1;height:0;border-top:3px double var(--line)}
+.floron{display:block;text-align:center;color:var(--rojo);font-size:1.4rem;line-height:1;margin:6px 0}
+
+/* Encabezado de la app */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;justify-content:space-between;padding:8px 18px;background:var(--bg);border-bottom:3px double var(--line)}
+.brand{font-family:var(--fell);font-size:1.75rem;line-height:1}
+.brand span{color:var(--rojo);font-size:1.12em}
+.icon-btn{background:none;border:1px solid var(--line);width:40px;height:40px;display:grid;place-items:center;border-radius:2px}
+main{max-width:620px;margin:0 auto;padding:0 20px 160px}
+.view{display:none}.view.active{display:block}
+
+/* Láminas: grabados con marco doble y leyenda al pie */
+.lamina{margin:0}
+.lamina .marco{background:var(--papel);padding:7px;border:1px solid var(--ink);outline:1px solid var(--ink);outline-offset:3px;margin:4px}
+.lamina img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;filter:sepia(.28) contrast(1.06);background:var(--surface2)}
+.lamina .marco{position:relative}.lamina .marco.sin::after{content:"❦";position:absolute;inset:0;display:grid;place-items:center;font-size:3rem;color:var(--line)}
+.lamina figcaption{font-family:var(--sc);font-size:.92rem;letter-spacing:.03em;text-align:center;color:var(--soft);margin-top:10px}
+
+/* Portada */
+.hero{padding:22px 0 0;text-align:center}
+.hero .lamina{max-width:330px;margin:0 auto}
+.hero .lamina img{aspect-ratio:5/4;object-position:center 30%}
+.hero h1{margin-top:22px}
+.hero p{max-width:34ch;margin:8px auto 0;color:var(--soft);font-style:italic}
+
+/* Formulario: hoja rayada */
+.ask{margin-top:24px}
+.hoja-rayada{background:var(--surface);border:1px solid var(--line);box-shadow:inset 0 0 0 4px var(--surface),inset 0 0 0 5px var(--line)}
+textarea{display:block;width:100%;min-height:150px;resize:vertical;border:0;padding:12px 18px;font-size:1.1rem;line-height:32px;
+  background:transparent repeating-linear-gradient(to bottom,transparent 0 31px,var(--line) 31px 32px);background-position:0 11px}
+textarea:focus{outline:none}.hoja-rayada:focus-within{border-color:var(--rojo)}
+textarea::placeholder{color:var(--soft);font-style:italic}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:transparent;padding:4px 12px;font-family:var(--sc);font-size:.98rem;color:var(--soft);border-radius:2px}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.fila{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.seg{display:inline-flex;border:1px solid var(--line)}
+.seg button{border:0;background:transparent;padding:6px 14px;font-family:var(--sc);font-size:1rem;color:var(--soft)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.btn{border:0;padding:12px 20px;background:var(--rojo);color:var(--on-rojo);font-family:var(--sc);font-size:1.1rem;letter-spacing:.03em;border-radius:2px;box-shadow:inset 0 0 0 2px var(--rojo),inset 0 0 0 3px var(--on-rojo)}
+.btn.full{width:100%;margin-top:16px;padding:14px}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn:disabled{opacity:.55}
+.nota{font-size:.92rem;color:var(--soft);margin-top:12px;text-align:center;font-style:italic}
+
+/* Respuesta */
+.estado{text-align:center;color:var(--soft);font-style:italic;font-size:1.15rem;padding:26px 0}
+.tema{font-family:var(--sc);text-align:center;font-size:1.05rem;color:var(--rojo);margin:40px 0 4px;letter-spacing:.04em}
+.titulo-cap{font-family:var(--fell);text-align:center;font-size:1.9rem;margin:0 0 18px;line-height:1.2}
+.empatia{font-size:1.22rem;line-height:1.6}
+.empatia::first-letter{font-family:var(--fell);float:left;font-size:4.1em;line-height:.82;padding:6px 8px 0 0;color:var(--rojo)}
+.aviso{font-size:.95rem;border:1px dashed var(--line);padding:9px 13px;margin-top:22px;color:var(--soft);font-style:italic}
+.crisis{border:2px solid var(--rojo);padding:14px 16px;margin:22px 0;background:var(--surface)}
+.crisis h3{color:var(--rojo);margin-bottom:6px}
+.crisis a{color:var(--ink);font-weight:600}
+.verso{margin:0 0 24px}
+.verso cite{display:block;font-family:var(--sc);font-style:normal;color:var(--rojo);font-size:1.05rem;letter-spacing:.03em}
+.verso blockquote{margin:2px 0 8px;font-size:1.28rem;line-height:1.5;font-style:italic}
+.verso p{color:var(--soft);margin:0}
+.historia{margin:0 0 30px}
+.historia .txt{padding:14px 2px 0}
+.historia .ref{font-family:var(--sc);color:var(--rojo);letter-spacing:.03em;margin:2px 0 10px}
+.historia .leccion{font-style:italic;border-left:3px double var(--oro);padding-left:14px;margin-top:10px}
+.link{background:none;border:0;padding:0;color:var(--rojo);font-family:var(--sc);font-size:1.05rem;text-decoration:underline;text-underline-offset:3px}
+.tabs-trad{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--ink)}
+.tabs-trad button{border:1px solid transparent;border-bottom:0;background:transparent;padding:8px 2px;font-family:var(--sc);font-size:.98rem;color:var(--soft);margin-bottom:-1px}
+.tabs-trad button[aria-selected="true"]{border-color:var(--ink);background:var(--surface);color:var(--ink)}
+.trad-panel{background:var(--surface);border:1px solid var(--ink);border-top:0;padding:16px 18px}
+.raiz{text-align:center;border:1px solid var(--line);outline:1px solid var(--line);outline-offset:3px;padding:22px 18px;margin:4px}
+.raiz .orig{font-family:'Noto Serif Hebrew','EB Garamond',serif;font-size:3rem;line-height:1.1;color:var(--rojo);display:block}
+.raiz .tr{font-style:italic;font-size:1.3rem;display:block;margin-top:4px}
+.raiz .sig{text-align:left;margin:14px 0 0}
+ol.pasos{list-style:none;counter-reset:p;padding:0;margin:0}
+ol.pasos li{counter-increment:p;display:grid;grid-template-columns:36px 1fr;gap:8px;margin-bottom:12px}
+ol.pasos li::before{content:counter(p,upper-roman) ".";font-family:var(--fell);font-size:1.25rem;color:var(--rojo);line-height:1.35}
+.oracion{font-style:italic;font-size:1.25rem;line-height:1.6;text-align:center;padding:0 6px}
+.plan li{margin-bottom:6px}
+.acciones{display:flex;gap:8px;flex-wrap:wrap;margin:30px 0 8px}
+
+/* Historias */
+.intro{margin:24px 0 6px;text-align:center}
+.intro p{font-style:italic}
+.lista-hist{display:grid;gap:28px;margin-top:18px}
+@media (min-width:600px){.lista-hist{grid-template-columns:1fr 1fr}}
+.lista-hist .historia{background:none;border:0;padding:0;text-align:left;width:100%;cursor:pointer;margin:0}
+.lista-hist .historia p{margin:0}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{font-family:var(--sc);font-size:.88rem;color:var(--soft);border-bottom:1px solid var(--line)}
+
+/* Mapa como carta antigua */
+.mapa-wrap{background:var(--papel);border:1px solid var(--ink);outline:1px solid var(--ink);outline-offset:3px;margin:18px 4px 4px}
+.mapa{display:block;width:100%;height:auto}
+.mapa .mar{fill:#7E93A0;opacity:.35}
+.mapa .rio{fill:none;stroke:#5E7684;stroke-width:1.5}
+.mapa .tierra{fill:#EFE3C4}
+.mapa .punto{fill:#8C1C13;stroke:#F8F1DF;stroke-width:1.5}
+.mapa .punto.sel{fill:#2B2118}
+.mapa text{font-family:'EB Garamond',serif;font-size:10px;fill:#2B2118;paint-order:stroke;stroke:#EFE3C4;stroke-width:3px}
+.mapa .mar-nombre{font-family:'IM Fell English',serif;font-style:italic;fill:#3F5663;font-size:11px;stroke:none}
+.lugar-info{padding:14px 16px;border-top:1px solid var(--ink);color:#2B2118;background:var(--papel)}
+.lugar-info ul{padding-left:18px;margin:6px 0 0}
+.lugar-info .link{color:#8C1C13}
+
+/* Diario y Hoy */
+.vacio{text-align:center;padding:40px 10px;color:var(--soft);font-style:italic}
+.entrada{border-bottom:1px solid var(--line);padding:14px 0}
+.entrada .fecha{font-family:var(--sc);font-size:.92rem;color:var(--rojo)}
+.entrada .q{font-size:1.15rem;margin:4px 0;font-style:italic}
+.vdia{text-align:center;padding-top:20px}
+.vdia blockquote{margin:18px 0 0;font-family:var(--fell);font-size:1.8rem;line-height:1.35}
+.vdia cite{display:block;margin-top:10px;color:var(--rojo);font-style:normal;font-family:var(--sc);font-size:1.1rem}
+.plan-lista{list-style:none;padding:0;margin:0}
+.plan-lista li{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}
+.plan-lista input{width:22px;height:22px;margin-top:4px;accent-color:var(--rojo);flex:0 0 auto}
+.plan-lista .hecho{text-decoration:line-through;color:var(--soft)}
+
+/* Reproductor del abuelo */
+.player{position:fixed;left:12px;right:12px;bottom:calc(74px + env(safe-area-inset-bottom,0px));z-index:40;max-width:596px;margin:0 auto;display:none;align-items:center;gap:12px;background:var(--ink);color:var(--bg);padding:10px 12px 10px 14px;border-radius:2px;box-shadow:inset 0 0 0 3px var(--ink),inset 0 0 0 4px var(--bg)}
+.player.on{display:flex}
+.player .onda{display:flex;gap:3px;align-items:flex-end;height:18px}
+.player .onda i{width:3px;background:var(--oro);animation:onda 1s ease-in-out infinite}
+.player .onda i:nth-child(2){animation-delay:.2s}.player .onda i:nth-child(3){animation-delay:.4s}.player .onda i:nth-child(4){animation-delay:.6s}
+@keyframes onda{0%,100%{height:5px}50%{height:18px}}
+@media (prefers-reduced-motion:reduce){.player .onda i{animation:none;height:10px}}
+.player .quien{flex:1;font-size:.98rem;line-height:1.25}
+.player .quien strong{display:block;font-family:var(--fell);font-weight:400;font-size:1.15rem}
+.player button{border:0;background:var(--bg);color:var(--ink);padding:7px 13px;font-family:var(--sc);border-radius:2px}
+
+/* Navegación */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);background:var(--bg);border-top:3px double var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
+.nav button{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:1px;font-family:var(--sc);font-size:.86rem;color:var(--soft);padding:3px 0}
+.nav svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.nav button[aria-current="page"]{color:var(--rojo)}
+
+/* Hoja y ajustes */
+.hoja{position:fixed;inset:0;z-index:50;display:none;background:rgba(20,14,8,.6)}
+.hoja.open{display:block}
+.hoja .panel{position:absolute;left:0;right:0;bottom:0;max-height:90%;overflow:auto;background:var(--bg);border-top:3px double var(--ink);padding:10px 20px calc(26px + env(safe-area-inset-bottom,0px));max-width:620px;margin:0 auto}
+.hoja .asa{width:44px;height:4px;background:var(--line);margin:4px auto 12px}
+.ajuste{padding:12px 0;border-bottom:1px solid var(--line)}
+.ajuste h3{font-size:1.25rem;margin-bottom:6px}
+.opcion{display:flex;gap:12px;align-items:flex-start;padding:7px 0}
+.opcion input{margin-top:6px;accent-color:var(--rojo);width:18px;height:18px;flex:0 0 auto}
+.toast{position:fixed;left:50%;bottom:calc(140px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;font-size:.98rem;z-index:60;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">La <span>P</span>alabra</div>
+  <span style="display:flex;gap:8px"><button class="btn ghost" id="btnInstalar" hidden style="padding:6px 12px;font-size:1rem">Instalar</button>
+  <button class="icon-btn" id="btnAjustes" aria-label="Ajustes de voz y apariencia"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button></span>
+</header>
+
+<main>
+<section class="view active" id="v-consultar" aria-label="Consultar">
+  <div class="hero">
+    <div id="portada"></div>
+    <h1>¿Qué estás viviendo?</h1>
+    <p>Cuéntalo con tus palabras. Las Escrituras te responden con versículos, historias y la mirada de cada tradición.</p>
+  </div>
+  <div class="ask">
+    <div class="hoja-rayada"><label for="consulta" style="position:absolute;left:-9999px">Tu situación</label>
+      <textarea id="consulta" maxlength="1500" placeholder="Escribe aquí lo que estás viviendo…"></textarea></div>
+    <div class="chips" id="ejemplos" aria-label="Temas frecuentes"></div>
+    <div class="fila">
+      <span class="soft">Explícamelo</span>
+      <div class="seg" role="group" aria-label="Nivel de lenguaje">
+        <button type="button" data-modo="joven" aria-pressed="false">para jóvenes</button>
+        <button type="button" data-modo="adulto" aria-pressed="true">para adultos</button>
+      </div>
+    </div>
+    <button class="btn full" id="btnConsultar">Buscar consejo en las Escrituras</button>
+    <p class="nota">La Palabra orienta desde la fe. No reemplaza a un pastor, sacerdote, rabino ni a un profesional de la salud.</p>
+  </div>
+  <div id="resultado" aria-live="polite"></div>
+</section>
+
+<section class="view" id="v-historias" aria-label="Historias">
+  <div class="intro"><h1>Historias</h1><span class="floron" aria-hidden="true">❦</span><p class="soft">Hombres y mujeres de la Biblia que vivieron lo mismo que tú.</p></div>
+  <div class="chips" id="filtroTemas"></div>
+  <div class="lista-hist" id="listaHist"></div>
+</section>
+
+<section class="view" id="v-mapas" aria-label="Mapas">
+  <div class="intro"><h1>Mapas</h1><span class="floron" aria-hidden="true">❦</span><p class="soft">Toca un lugar para ver qué sucedió allí.</p></div>
+  <div class="seg" role="group" aria-label="Escala del mapa">
+    <button type="button" data-mapa="israel" aria-pressed="true">tierra de Israel</button>
+    <button type="button" data-mapa="region" aria-pressed="false">mundo bíblico</button>
+  </div>
+  <div class="mapa-wrap"><svg class="mapa" id="mapa" role="img" aria-label="Mapa bíblico"></svg><div class="lugar-info" id="lugarInfo"></div></div>
+</section>
+
+<section class="view" id="v-diario" aria-label="Diario">
+  <div class="intro"><h1>Mi diario</h1><span class="floron" aria-hidden="true">❦</span><p class="soft">Tus consultas guardadas. Se quedan solo en este teléfono.</p></div>
+  <div id="listaDiario"></div>
+</section>
+
+<section class="view" id="v-hoy" aria-label="Hoy">
+  <div class="vdia"><div id="laminaHoy"></div>
+    <blockquote id="vdiaTexto"></blockquote><cite id="vdiaRef"></cite>
+    <div class="fila" style="justify-content:center;margin-top:20px">
+      <button class="btn" id="btnEscucharVdia">Escuchar al abuelo</button>
+      <button class="btn ghost" id="btnCompartirVdia">Compartir imagen</button>
+    </div>
+  </div>
+  <h2>Mi plan de lectura</h2>
+  <div id="planHoy"></div>
+</section>
+</main>
+
+<div class="player" id="player" role="status">
+  <span class="onda" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+  <span class="quien"><strong>Abuelo Simeón</strong><span id="playerEstado">Está leyendo para ti</span></span>
+  <button id="btnDetener">Detener</button>
+</div>
+
+<nav class="nav" aria-label="Secciones">
+  <button data-view="consultar" aria-current="page"><svg viewBox="0 0 24 24"><path d="M12 3c1.6 2.2 2.2 3.7 1.4 5.2-.5.9-1.4 1.3-1.4 1.3s-.9-.4-1.4-1.3C9.8 6.7 10.4 5.2 12 3z"/><path d="M3 14h13c2.5 0 4-1.2 5-3-.2 3.8-2.7 7-7 7H8c-2.6 0-4.5-1.6-5-4z"/></svg>Consultar</button>
+  <button data-view="historias"><svg viewBox="0 0 24 24"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v14c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v14"/></svg>Historias</button>
+  <button data-view="mapas"><svg viewBox="0 0 24 24"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Mapas</button>
+  <button data-view="diario"><svg viewBox="0 0 24 24"><path d="M6 3h11a1 1 0 0 1 1 1v17l-6.5-4L5 21V4a1 1 0 0 1 1-1z"/></svg>Diario</button>
+  <button data-view="hoy"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6 19 19M5 19l1.4-1.4M17.6 6.4 19 5"/></svg>Hoy</button>
+</nav>
+
+<div class="hoja" id="hoja" role="dialog" aria-modal="true"><div class="panel"><div class="asa"></div><div id="hojaCont"></div></div></div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+/* ===================== DATOS ===================== */
+// Texto bíblico: Reina-Valera 1909 (dominio público), ortografía modernizada. Verificar antes de publicar.
+const VERSOS_DIA = [
+  {t:"Lámpara es a mis pies tu palabra, y lumbrera a mi camino.", r:"Salmo 119:105"},
+  {t:"Jehová es mi pastor; nada me faltará.", r:"Salmo 23:1"},
+  {t:"Fíate de Jehová de todo tu corazón, y no estribes en tu prudencia.", r:"Proverbios 3:5"},
+  {t:"No temas, que yo soy contigo; no desmayes, que yo soy tu Dios que te esfuerzo: siempre te ayudaré.", r:"Isaías 41:10"},
+  {t:"Venid a mí todos los que estáis trabajados y cargados, que yo os haré descansar.", r:"Mateo 11:28"},
+  {t:"Todo lo puedo en Cristo que me fortalece.", r:"Filipenses 4:13"},
+  {t:"Porque yo sé los pensamientos que tengo acerca de vosotros, dice Jehová, pensamientos de paz, y no de mal.", r:"Jeremías 29:11"},
+  {t:"Cercano está Jehová a los quebrantados de corazón; y salvará a los contritos de espíritu.", r:"Salmo 34:18"},
+  {t:"Mira que te mando que te esfuerces y seas valiente: no temas ni desmayes.", r:"Josué 1:9"},
+  {t:"No seas vencido de lo malo; mas vence con el bien el mal.", r:"Romanos 12:21"},
+  {t:"Por la noche durará el lloro, y a la mañana vendrá la alegría.", r:"Salmo 30:5"},
+  {t:"Echa sobre Jehová tu carga, y él te sustentará.", r:"Salmo 55:22"}
+];
+
+// Lugares: lon/lat reales aproximados. i = mapa Tierra de Israel, r = mapa Mundo bíblico
+const LUGARES = {
+  jerusalen:{n:"Jerusalén",lon:35.23,lat:31.78,i:1,r:1,e:"ciudad",ev:["David la hace su capital · 2 Samuel 5","Salomón construye el Templo · 1 Reyes 6","Jesús muere y resucita · Lucas 23–24","Pentecostés · Hechos 2"]},
+  belen:{n:"Belén",lon:35.20,lat:31.70,i:1,e:"campo",ev:["Rut encuentra a Booz · Rut 2–4","Samuel unge a David · 1 Samuel 16","Nace Jesús · Lucas 2"]},
+  nazaret:{n:"Nazaret",lon:35.30,lat:32.70,i:1,e:"campo",ev:["El ángel visita a María · Lucas 1:26","Lo rechazan en su pueblo · Lucas 4:16–30"]},
+  capernaum:{n:"Mar de Galilea",lon:35.575,lat:32.88,i:1,e:"mar",ev:["Jesús llama a Pedro · Lucas 5","Calma la tormenta · Marcos 4:35–41","Pedro es restaurado · Juan 21"]},
+  jerico:{n:"Jericó",lon:35.44,lat:31.87,i:1,e:"ciudad",ev:["Rahab esconde a los espías · Josué 2","Caen los muros · Josué 6","Zaqueo cambia su vida · Lucas 19:1–10"]},
+  hebron:{n:"Hebrón",lon:35.10,lat:31.53,i:1,e:"campo",ev:["Abraham recibe a tres visitantes · Génesis 18","Cueva de Macpela · Génesis 23","David reina siete años · 2 Samuel 2"]},
+  betel:{n:"Betel",lon:35.22,lat:31.93,i:1,e:"monte",ev:["Jacob sueña con la escalera · Génesis 28"]},
+  siquem:{n:"Siquem",lon:35.28,lat:32.21,i:1,e:"campo",ev:["Josué renueva el pacto · Josué 24","Jesús y la samaritana en el pozo · Juan 4"]},
+  carmelo:{n:"Monte Carmelo",lon:35.05,lat:32.73,i:1,e:"monte",ev:["Elías frente a los profetas de Baal · 1 Reyes 18"]},
+  jope:{n:"Jope",lon:34.75,lat:32.05,i:1,e:"mar",ev:["Jonás huye en un barco · Jonás 1","Pedro recibe una visión · Hechos 10"]},
+  gaza:{n:"Gaza",lon:34.46,lat:31.50,i:1,e:"ciudad",ev:["Sansón derriba el templo · Jueces 16","Felipe y el etíope · Hechos 8:26"]},
+  beerseba:{n:"Beerseba",lon:34.79,lat:31.25,i:1,e:"desierto",ev:["Dios escucha a Agar e Ismael · Génesis 21","Elías huye agotado · 1 Reyes 19"]},
+  engadi:{n:"En-gadi",lon:35.39,lat:31.46,i:1,e:"desierto",ev:["David perdona la vida a Saúl · 1 Samuel 24"]},
+  jordan:{n:"Río Jordán",lon:35.54,lat:32.05,i:1,e:"rio",ev:["Israel cruza el Jordán · Josué 3","Naamán es sanado · 2 Reyes 5","Bautismo de Jesús · Mateo 3"]},
+  cesarea:{n:"Cesarea",lon:34.89,lat:32.50,i:1,e:"mar",ev:["Cornelio recibe el Espíritu · Hechos 10","Pablo ante el rey Agripa · Hechos 26"]},
+  nebo:{n:"Monte Nebo",lon:35.72,lat:31.77,i:1,e:"monte",ev:["Moisés contempla la Tierra Prometida · Deuteronomio 34"]},
+  damasco:{n:"Damasco",lon:36.29,lat:33.51,r:1,e:"ciudad",ev:["Saulo se convierte en el camino · Hechos 9"]},
+  egipto:{n:"Egipto (Gosén)",lon:31.8,lat:30.6,r:1,e:"palacio",ev:["José gobierna Egipto · Génesis 41","Moisés y las plagas · Éxodo 7–12","La sagrada familia se refugia · Mateo 2:13"]},
+  sinai:{n:"Monte Sinaí",lon:33.97,lat:28.54,r:1,e:"monte",ev:["La zarza ardiente · Éxodo 3","Los Diez Mandamientos · Éxodo 20","Elías escucha el silbo apacible · 1 Reyes 19"]},
+  babilonia:{n:"Babilonia",lon:44.42,lat:32.54,r:1,e:"ciudad",ev:["El horno de fuego · Daniel 3","Daniel en el foso · Daniel 6","El llanto del exilio · Salmo 137"]},
+  ninive:{n:"Nínive",lon:43.15,lat:36.36,r:1,e:"ciudad",ev:["Jonás predica y la ciudad se arrepiente · Jonás 3"]},
+  ur:{n:"Ur de los caldeos",lon:46.10,lat:30.96,r:1,e:"ciudad",ev:["Abram sale con su familia · Génesis 11:31"]},
+  haran:{n:"Harán",lon:39.03,lat:36.87,r:1,e:"desierto",ev:["Dios llama a Abram · Génesis 12","Jacob trabaja por Raquel · Génesis 29"]},
+  susa:{n:"Susa",lon:48.25,lat:32.19,r:1,e:"palacio",ev:["Ester arriesga su vida · Ester 4–5","Nehemías, copero del rey · Nehemías 1"]},
+  antioquia:{n:"Antioquía",lon:36.16,lat:36.20,r:1,e:"ciudad",ev:["Los llaman cristianos por primera vez · Hechos 11:26"]},
+  tarso:{n:"Tarso",lon:34.90,lat:36.92,r:1,e:"ciudad",ev:["Ciudad natal de Pablo · Hechos 21:39"]}
+};
+
+const EJEMPLOS = [
+  {c:"Deudas", t:"Tengo muchas deudas, el negocio va mal y siento que no voy a poder sacar adelante a mi familia."},
+  {c:"Mi matrimonio", t:"Mi matrimonio está en crisis. Ya casi no hablamos y siento que nos estamos perdiendo."},
+  {c:"Perdonar a mi padre", t:"Mi papá nos abandonó cuando era niño y ahora quiere volver a mi vida. No sé si puedo perdonarlo."},
+  {c:"Duelo", t:"Perdí a mi mamá hace poco y no encuentro consuelo. No entiendo por qué Dios lo permitió."},
+  {c:"Me siento solo", t:"Me siento solo aunque estoy rodeado de gente. Siento que a nadie le importo."},
+  {c:"Tentación en el trabajo", t:"En el trabajo me ofrecen dinero por hacer algo que no es correcto, y lo necesito."},
+  {c:"Miedo al futuro", t:"Tengo miedo de tomar una decisión grande y equivocarme."}
+];
+
+// Cada historia lleva su lámina de Gustave Doré (The Doré Bible Gallery, 1866; dominio público)
+const HISTORIAS = [
+  {id:"jose",p:18,t:"José se da a conocer a sus hermanos",ref:"Génesis 45",l:"egipto",tem:["perdón","traición","familia"],
+   res:"Sus propios hermanos lo vendieron como esclavo. Años después, siendo gobernador de Egipto, los tuvo en sus manos cuando llegaron pidiendo comida. No pudo contenerse, lloró a gritos y les dijo: yo soy José, vuestro hermano.",
+   lec:"Pudo vengarse y no lo hizo: lo que ellos pensaron para mal, Dios lo encaminó para bien (Génesis 50:20)."},
+  {id:"jose-sueno",p:17,t:"José interpreta el sueño del faraón",ref:"Génesis 41",l:"egipto",tem:["deudas","provisión","trabajo"],
+   res:"El faraón soñó con siete vacas gordas devoradas por siete flacas. José entendió el mensaje: vendrían siete años de abundancia y siete de hambre, y propuso guardar una parte de cada cosecha.",
+   lec:"La fe también planea y administra. Orar y hacer cuentas no se contradicen."},
+  {id:"agar",p:10,t:"Agar en el desierto",ref:"Génesis 21:14–21",l:"beerseba",tem:["tristeza","abandono","miedo"],
+   res:"Expulsada con su hijo, se quedó sin agua en el desierto. Dejó al muchacho bajo un arbusto y se sentó lejos para no verlo morir, y lloró.",
+   lec:"Dios oyó la voz del muchacho y le abrió los ojos: había un pozo de agua cerca que ella, en su dolor, no veía."},
+  {id:"david-saul",p:32,t:"David perdona la vida a Saúl",ref:"1 Samuel 24",l:"engadi",tem:["venganza","enemigos","perdón"],
+   res:"Saúl lo perseguía para matarlo y entró solo a la cueva donde David se escondía. Sus hombres le dijeron: este es el día que Dios te prometió.",
+   lec:"David solo cortó la orilla de su manto, y aun eso le pesó. Dejó el juicio en manos de Dios, y Dios lo levantó a su tiempo."},
+  {id:"rut",p:28,t:"Noemí y sus nueras",ref:"Rut 1",l:"belen",tem:["duelo","lealtad","familia"],
+   res:"Noemí lo perdió todo: su esposo y sus dos hijos. Les pidió a sus nueras que volvieran a su tierra. Rut se negó: a dondequiera que tú fueres, iré yo.",
+   lec:"La lealtad en medio de la pérdida abre caminos que nadie ve. De Rut viene el linaje del rey David."},
+  {id:"daniel",p:52,t:"Daniel en el foso de los leones",ref:"Daniel 6",l:"babilonia",tem:["fe","trabajo","presión"],
+   res:"Sus compañeros de gobierno, por envidia, le tendieron una trampa legal para que lo castigaran por orar a su Dios.",
+   lec:"Daniel siguió orando como siempre, sin esconderse ni atacar. Dios cerró la boca de los leones."},
+  {id:"jonas",p:54,t:"Jonás predica en Nínive",ref:"Jonás 1–4",l:"ninive",tem:["huir","segunda oportunidad","perdón"],
+   res:"Dios lo mandó a Nínive y él huyó en un barco. Después de la tormenta y del gran pez, al fin fue y predicó, y toda la ciudad se arrepintió.",
+   lec:"Dios da segundas oportunidades a quien huye, y también a los enemigos que Jonás no quería ver perdonados."},
+  {id:"pedro",p:68,t:"Pedro camina sobre el agua",ref:"Mateo 14:22–33",l:"capernaum",tem:["miedo","fe","duda"],
+   res:"Pedro caminó sobre el mar hacia Jesús mientras lo miraba. Al ver la fuerza del viento tuvo miedo y comenzó a hundirse.",
+   lec:"Gritó: ¡Señor, sálvame! Y al momento Jesús le tendió la mano. Dudar no te descalifica: pedir ayuda te salva."},
+  {id:"prodigo",p:75,t:"El hijo pródigo",ref:"Lucas 15:11–32",l:null,tem:["familia","perdón","regreso"],
+   res:"Un hijo pidió su herencia en vida, la malgastó y terminó cuidando cerdos. Volvió a casa dispuesto a ser un simple jornalero.",
+   lec:"El padre lo vio de lejos y corrió a abrazarlo antes de escuchar su discurso. Y el hermano mayor también necesitaba aprender a perdonar."},
+  {id:"ester",p:43,t:"Ester desenmascara a Amán",ref:"Ester 4–7",l:"susa",tem:["miedo","valentía","injusticia"],
+   res:"Presentarse ante el rey sin ser llamada podía costarle la vida. Aun así fue, y en el banquete denunció al hombre que planeaba exterminar a su pueblo.",
+   lec:"Ayunó, pidió que oraran por ella y se atrevió. Quizás estás donde estás para un momento como este (Ester 4:14)."},
+  {id:"absalon",p:35,t:"David llora por su hijo Absalón",ref:"2 Samuel 18:33",l:"jerusalen",tem:["duelo","hijos","familia"],
+   res:"Su hijo se rebeló contra él y murió en la batalla. El rey subió a la sala sobre la puerta y lloró: ¡Hijo mío Absalón, quién me diera morir en tu lugar!",
+   lec:"La Biblia no esconde el dolor de un padre. Llorar no es falta de fe: David lloró y Dios lo sostuvo."},
+  {id:"moises",p:19,t:"Moisés salvado de las aguas",ref:"Éxodo 2:1–10",l:"egipto",tem:["miedo","confianza","hijos"],
+   res:"El faraón mandó matar a los niños hebreos. Su madre lo escondió tres meses y luego lo puso en una cesta entre los juncos del Nilo.",
+   lec:"La hija del faraón lo encontró, y la madre terminó criándolo con paga. Cuando ya no puedes proteger lo que amas, ponlo en manos de Dios."},
+  {id:"adultera",p:79,t:"Jesús y la mujer sorprendida en adulterio",ref:"Juan 8:1–11",l:"jerusalen",tem:["culpa","tentación","segunda oportunidad"],
+   res:"La llevaron ante Jesús para apedrearla. Él se inclinó, escribió en la tierra y dijo: el que de vosotros esté sin pecado, arroje contra ella la piedra el primero.",
+   lec:"Ni yo te condeno: vete, y no peques más. La gracia y el cambio de vida van juntos."},
+  {id:"tempestad",p:64,t:"Jesús calma la tempestad",ref:"Marcos 4:35–41",l:"capernaum",tem:["miedo","ansiedad","crisis"],
+   res:"La barca se llenaba de agua y Jesús dormía. Los discípulos lo despertaron gritando: ¿no tienes cuidado que perecemos?",
+   lec:"Él reprendió al viento y se hizo grande bonanza. Luego les preguntó: ¿por qué estáis así amedrentados?"},
+  {id:"samaritano",p:73,t:"El buen samaritano",ref:"Lucas 10:25–37",l:null,tem:["soledad","compasión","prójimo"],
+   res:"A un hombre lo asaltaron y lo dejaron medio muerto en el camino. Un sacerdote y un levita pasaron de largo. Un extranjero despreciado se detuvo a curarlo.",
+   lec:"Prójimo es el que se acerca. A veces Dios te ayuda por medio de quien menos esperas."},
+  {id:"getsemani",p:83,t:"La agonía en el huerto",ref:"Lucas 22:39–46",l:"jerusalen",tem:["angustia","tristeza","decisiones"],
+   res:"La noche antes de morir, Jesús oró con tanta angustia que su sudor era como gotas de sangre que caían hasta la tierra.",
+   lec:"No se haga mi voluntad, sino la tuya. Hasta Jesús sintió angustia, y un ángel vino del cielo a fortalecerlo."}
+];
+
+// Respuesta de ejemplo (solo se ve si la IA aún no está conectada)
+const DEMO = {
+  crisis:false,
+  tema:"Sobre las deudas y el sustento de la familia",
+  titulo:"Cuando las cuentas quitan el sueño",
+  empatia:"Cargar con deudas y sentir que tu familia depende de ti pesa en el pecho y quita el sueño. Sentir miedo no es falta de fe: hombres y mujeres muy fieles de la Biblia pasaron escasez. Veamos qué dice la Palabra para este momento.",
+  versiculos:[
+    {ref:"Filipenses 4:6–7",texto:"Por nada estéis afanosos; sino sean notorias vuestras peticiones delante de Dios en toda oración y ruego, con hacimiento de gracias. Y la paz de Dios, que sobrepuja todo entendimiento, guardará vuestros corazones.",explicacion:"Pablo escribió esto preso y sin recursos. No promete que el problema desaparezca de inmediato, sino una paz que te guarda mientras lo enfrentas."},
+    {ref:"Mateo 6:34",texto:"No os congojéis pues por el día de mañana; que el día de mañana traerá su fatiga: basta al día su afán.",explicacion:"Jesús no te pide ignorar las cuentas. Te pide no cargar hoy con el peso de todos los meses que vienen."},
+    {ref:"Salmo 37:25",texto:"Mozo fui, y he envejecido, y no he visto justo desamparado, ni su simiente que mendigue pan.",explicacion:"Es el testimonio de un anciano que miró su vida entera hacia atrás. Dios no abandona a quien camina con rectitud."},
+    {ref:"Proverbios 22:7",texto:"El rico se enseñoreará de los pobres; y el que toma prestado, siervo es del que empresta.",explicacion:"La Biblia es realista: la deuda quita libertad. Salir de ella no es solo un tema de dinero, es recuperar tu paz."}
+  ],
+  historias:[
+    {titulo:"José interpreta el sueño del faraón",ref:"Génesis 41",resumen:"José entendió que vendrían siete años de abundancia y siete de hambre, y organizó guardar una parte de cada cosecha para los tiempos difíciles.",leccion:"La fe también planea y administra. Orar y hacer un presupuesto no se contradicen.",lugar:"egipto",lamina:17},
+    {titulo:"Agar en el desierto",ref:"Génesis 21:14–21",resumen:"Sin agua y sin salida, Agar se sentó a llorar pensando que su hijo iba a morir.",leccion:"Dios le abrió los ojos y vio un pozo que estaba ahí todo el tiempo. En la angustia a veces no vemos la salida que ya existe.",lugar:"beerseba",lamina:10},
+    {titulo:"Jesús calma la tempestad",ref:"Marcos 4:35–41",resumen:"La barca se hundía y los discípulos creyeron que Jesús no se preocupaba por ellos.",leccion:"Él estaba en la misma barca. La tormenta no significa que Dios te abandonó.",lugar:"capernaum",lamina:64}
+  ],
+  tradiciones:{
+    catolica:"La Iglesia enseña a confiar en la providencia de Dios, que cuida de sus criaturas sin quitarnos la responsabilidad de trabajar. Invita a no caer en la desesperanza, a vivir con sobriedad y a apoyarse en la comunidad parroquial. San José, trabajador y proveedor de su familia, es modelo e intercesor para el padre que lucha por los suyos.",
+    evangelica:"Se enfatiza Mateo 6:33: buscar primero el Reino y confiar en que Dios suplirá lo necesario (Filipenses 4:19). Junto con la oración se enseña la mayordomía: presupuesto, trabajo diligente (Proverbios 6:6–8) y consejería financiera en la iglesia. La fe no está peleada con el orden.",
+    ortodoxa:"La tradición insiste en vivir el día presente en las manos de Dios, como en el Padrenuestro: el pan de cada día. Los Padres enseñan que la preocupación excesiva roba la paz del corazón y proponen la oración breve y repetida, la Oración de Jesús, para aquietar la mente en medio de la angustia.",
+    judia:"El judaísmo equilibra bitajón, la confianza en Dios, con hishtadlut, el esfuerzo humano: se trabaja con todas las fuerzas y se deja el resultado en Sus manos. El Talmud (Sotá 48b) enseña que quien tiene pan hoy y se angustia por lo que comerá mañana es de poca fe. Bahya ibn Paquda dedica a esto la Puerta de la Confianza en su obra Deberes del corazón."
+  },
+  raiz:{original:"μεριμνάω",transliteracion:"merimnáo",idioma:"griego",significado:"Afanarse, estar ansioso. Evoca una mente dividida, jalada en varias direcciones. Es la palabra que usan Jesús en Mateo 6 y Pablo en Filipenses 4: Dios no te pide que no pienses en tus deudas, sino que no dejes que te partan por dentro."},
+  pasos:["Escribe en una hoja todas tus deudas: a quién, cuánto y cuándo vence. Lo que se ve se puede enfrentar.","Habla con tu familia con honestidad. La carga compartida pesa menos.","Llama a tus acreedores antes de que te llamen y pide acuerdos de pago.","Busca consejo: un asesor financiero, tu comunidad de fe o alguien con experiencia en negocios.","Cada noche, entrégale a Dios en oración lo que no pudiste resolver ese día."],
+  oracion:"Señor, tú conoces cada cuenta y cada noche sin dormir. Dame el pan de hoy y sabiduría para ordenar lo de mañana. Quita de mí el miedo que me paraliza y dame fuerzas para trabajar con honestidad. Que mi familia vea en mí fe y no angustia. Amén.",
+  plan:[
+    {dia:1,lectura:"Mateo 6:25–34",enfoque:"No afanarse por el mañana"},
+    {dia:2,lectura:"Éxodo 16",enfoque:"El maná de cada día"},
+    {dia:3,lectura:"2 Reyes 4:1–7",enfoque:"La viuda y el aceite"},
+    {dia:4,lectura:"Génesis 41",enfoque:"José planea en la abundancia"},
+    {dia:5,lectura:"Proverbios 6:1–11",enfoque:"Deudas, fianzas y diligencia"},
+    {dia:6,lectura:"Filipenses 4:4–19",enfoque:"Paz y provisión"},
+    {dia:7,lectura:"Salmo 37",enfoque:"Confía y haz el bien"}
+  ]
+};
+</script>
+<script>
+/* ===================== UTILIDADES ===================== */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const guardar = (k, v) => { try { localStorage.setItem("lampara:" + k, JSON.stringify(v)); } catch (e) {} };
+const leer = (k, d) => { try { const v = localStorage.getItem("lampara:" + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2300); }
+
+/* ===================== LÁMINAS DE DORÉ ===================== */
+// Primero busca la imagen en la carpeta laminas/ de tu sitio; si no está, la toma de Project Gutenberg.
+const GUTENBERG = "https://www.gutenberg.org/cache/epub/8710/images/";
+function romano(n){ const t=[[100,"C"],[90,"XC"],[50,"L"],[40,"XL"],[10,"X"],[9,"IX"],[5,"V"],[4,"IV"],[1,"I"]]; let r=""; for (const [v,l] of t) while (n>=v){ r+=l; n-=v; } return r; }
+function lamina(n, titulo){
+  n = parseInt(n, 10); if (!(n >= 1 && n <= 100)) return "";
+  const f = String(n).padStart(3, "0") + ".jpg";
+  return `<figure class="lamina"><div class="marco"><img src="laminas/${f}" data-respaldo="${GUTENBERG}${f}" alt="${esc(titulo)}" loading="lazy" onerror="if(this.dataset.respaldo){this.src=this.dataset.respaldo;this.removeAttribute('data-respaldo')}else{this.style.visibility='hidden';this.parentNode.classList.add('sin')}"></div>
+    <figcaption>Lámina ${romano(n)}. — ${esc(titulo)}</figcaption></figure>`;
+}
+$("#portada").innerHTML = lamina(63, "El Sermón del Monte");
+
+/* ===================== AJUSTES (tema y voz) ===================== */
+let ajustes = Object.assign({ tema:"auto", voz:"natural", ritmo:"pausado" }, leer("ajustes", {}));
+function aplicarTema(){ if (ajustes.tema === "auto") delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = ajustes.tema === "claro" ? "light" : "dark"; }
+aplicarTema();
+function radio(nombre, valor, titulo, detalle){
+  return `<label class="opcion"><input type="radio" name="${nombre}" value="${valor}" ${ajustes[nombre] === valor ? "checked" : ""}><span><strong>${titulo}</strong>${detalle ? `<br><span class="soft" style="font-size:.93rem">${detalle}</span>` : ""}</span></label>`;
+}
+$("#btnAjustes").onclick = () => {
+  const vs = vocesEspanol();
+  abrirHoja(`<h2 style="margin-top:4px">Ajustes</h2>
+    <div class="ajuste"><h3>Voz del narrador</h3>
+      <p class="soft" id="estadoVoz" style="font-style:italic">Revisando la voz natural…</p>
+      ${radio("voz","natural","Abuelo Simeón","Voz natural de anciano (ElevenLabs o audios grabados en Artlist).")}
+      ${radio("voz","telefono","Solo la voz del teléfono","Funciona sin internet, pero suena sintética.")}
+      <button class="btn ghost" id="probarVoz" style="margin-top:8px">Probar la voz</button></div>
+    <div class="ajuste"><h3>Voz de respaldo del teléfono</h3>
+      ${vs.length ? `<p class="soft" style="margin-bottom:6px">Las marcadas con ★ son las más naturales que tiene tu celular.</p>
+      <select id="elegirVoz" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--line);font-size:1rem">
+        <option value="">Automática (la mejor disponible)</option>
+        ${vs.map(v => `<option value="${esc(v.name)}" ${v.name === ajustes.vozNombre ? "selected" : ""}>${VOZ_CALIDAD.test(v.name) ? "★ " : ""}${esc(v.name)} (${esc(v.lang)})</option>`).join("")}
+      </select>
+      <button class="btn ghost" id="probarTelefono" style="margin-top:8px">Probar esta voz</button>`
+      : `<p class="soft">Tu teléfono no reporta voces en español.</p>`}</div>
+    <div class="ajuste"><h3>Ritmo de lectura</h3>${radio("ritmo","pausado","Pausado","Como quien cuenta una historia junto al fuego.")}${radio("ritmo","normal","Normal")}</div>
+    <div class="ajuste" style="border:0"><h3>Apariencia</h3>${radio("tema","auto","Automática","Igual que tu teléfono.")}${radio("tema","claro","Clara")}${radio("tema","oscuro","Oscura")}</div>`);
+  $$("#hojaCont input[type=radio]").forEach(i => i.onchange = () => { ajustes[i.name] = i.value; guardar("ajustes", ajustes); aplicarTema(); });
+  $("#probarVoz").onclick = () => hablar(SALUDO, "saludo");
+  if ($("#elegirVoz")) {
+    $("#elegirVoz").onchange = e => { ajustes.vozNombre = e.target.value; guardar("ajustes", ajustes); };
+    $("#probarTelefono").onclick = () => { detener(); vozTelefono(SALUDO, ++sesionVoz); };
+  }
+  fetch("/.netlify/functions/voz").then(r => r.ok ? r.json() : null).catch(() => null).then(d => {
+    const el = $("#estadoVoz"); if (!el) return;
+    el.textContent = d && d.configurada
+      ? "La voz natural está activa."
+      : "La voz natural todavía no está configurada en el servidor. Mientras tanto oyes la voz del teléfono, por eso suena sintética.";
+  });
+};
+
+/* ===================== VOZ DEL ABUELO ===================== */
+const SALUDO = "Hijo mío, siéntate un momento conmigo. Lámpara es a mis pies tu palabra, y lumbrera a mi camino.";
+// 1) Voz natural: la función /voz genera audio con una voz de anciano (ElevenLabs).
+// 2) Respaldo: la voz del teléfono, más grave y lenta.
+const SILENCIO = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=";
+const audio = new Audio(); audio.preload = "auto";
+let sesionVoz = 0;
+if ("speechSynthesis" in window) { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => {}; }
+function mostrarPlayer(on, estado){ $("#player").classList.toggle("on", on); if (estado) $("#playerEstado").textContent = estado; }
+function partir(t, max){
+  const frases = t.match(/[^.!?;:]+[.!?;:]*\s*/g) || [t], out = []; let cur = "";
+  frases.forEach(f => { if ((cur + f).length > max && cur) { out.push(cur.trim()); cur = ""; } cur += f; });
+  if (cur.trim()) out.push(cur.trim()); return out;
+}
+function detener(){ sesionVoz++; try { audio.pause(); } catch (e) {} if ("speechSynthesis" in window) speechSynthesis.cancel(); mostrarPlayer(false); }
+$("#btnDetener").onclick = detener;
+
+// clave: nombre de un audio pregrabado en la carpeta audio/ (por ejemplo historia-jose.mp3)
+async function hablar(texto, clave){
+  detener(); const mi = ++sesionVoz;
+  mostrarPlayer(true, "Preparando su voz…");
+  if (ajustes.voz === "natural") {
+    try { audio.src = SILENCIO; audio.play().catch(() => {}); } catch (e) {} // desbloquea el audio en iPhone
+    if (clave && await audioGrabado(`audio/${clave}.mp3`, mi)) return;
+    if (mi !== sesionVoz) return;
+    const ok = await vozNatural(texto, mi);
+    if (ok || mi !== sesionVoz) return;
+  }
+  vozTelefono(texto, mi);
+}
+async function audioGrabado(url, mi){
+  try { const r = await fetch(url, { method:"HEAD" }); if (!r.ok || !/audio/.test(r.headers.get("content-type") || "")) return false; } catch (e) { return false; }
+  if (mi !== sesionVoz) return true;
+  mostrarPlayer(true, "Está leyendo para ti");
+  audio.src = url; audio.playbackRate = ajustes.ritmo === "pausado" ? 0.94 : 1;
+  await new Promise(res => { audio.onended = res; audio.onerror = res; audio.play().catch(res); });
+  if (mi === sesionVoz) mostrarPlayer(false);
+  return true;
+}
+async function vozNatural(texto, mi){
+  const trozos = partir(texto, 900);
+  const pedir = i => fetch("/.netlify/functions/voz", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ texto: trozos[i] }) })
+    .then(r => r.ok ? r.blob() : Promise.reject(r.status));
+  let siguiente = pedir(0);
+  for (let i = 0; i < trozos.length; i++) {
+    let blob;
+    try { blob = await siguiente; } catch (e) { if (i === 0) return false; mostrarPlayer(false); return true; }
+    if (mi !== sesionVoz) return true;
+    if (i + 1 < trozos.length) { siguiente = pedir(i + 1); siguiente.catch(() => {}); }
+    mostrarPlayer(true, "Voz natural · leyendo para ti");
+    audio.src = URL.createObjectURL(blob);
+    audio.playbackRate = ajustes.ritmo === "pausado" ? 0.94 : 1;
+    await new Promise(res => { audio.onended = res; audio.onerror = res; audio.play().catch(res); });
+    if (mi !== sesionVoz) return true;
+  }
+  mostrarPlayer(false); return true;
+}
+// Voces del teléfono: se prefieren las "naturales/neuronales" y masculinas; el usuario puede elegir otra en Ajustes
+const VOZ_HOMBRE = /jorge|diego|juan|carlos|pablo|enrique|andr[eé]s|[aá]lvaro|miguel|ra[uú]l|antonio|jos[eé]|gonzalo|jer[oó]nimo|tom[aá]s|alonso|dar[ií]o|male|hombre|masculin/i;
+const VOZ_CALIDAD = /natural|neural|online|enhanced|premium|mejorada|network/i;
+const puntajeVoz = v => (VOZ_CALIDAD.test(v.name) ? 4 : 0) + (VOZ_HOMBRE.test(v.name) ? 3 : 0) + (/(CO|MX|US|419)/i.test(v.lang) ? 1 : 0);
+function vocesEspanol(){ return ("speechSynthesis" in window) ? speechSynthesis.getVoices().filter(v => /^es/i.test(v.lang)).sort((a,b) => puntajeVoz(b) - puntajeVoz(a)) : []; }
+function vozDeAnciano(){
+  const vs = vocesEspanol();
+  return (ajustes.vozNombre && vs.find(v => v.name === ajustes.vozNombre)) || vs[0];
+}
+function vozTelefono(texto, mi){
+  if (!("speechSynthesis" in window)) { mostrarPlayer(false); toast("Este teléfono no tiene lectura en voz alta"); return; }
+  const v = vozDeAnciano(), trozos = partir(texto, 220);
+  mostrarPlayer(true, "Voz del teléfono (respaldo)");
+  trozos.forEach((t, i) => {
+    const u = new SpeechSynthesisUtterance(t);
+    u.lang = v ? v.lang : "es-ES"; if (v) u.voice = v;
+    u.pitch = 0.9; u.rate = ajustes.ritmo === "pausado" ? 0.86 : 0.95; // un tono muy bajo suena robótico
+    if (i === trozos.length - 1) u.onend = () => { if (mi === sesionVoz) mostrarPlayer(false); };
+    speechSynthesis.speak(u);
+  });
+}
+
+/* ===================== NAVEGACIÓN ===================== */
+function irA(vista){
+  $$(".view").forEach(v => v.classList.toggle("active", v.id === "v-" + vista));
+  $$(".nav button").forEach(b => b.dataset.view === vista ? b.setAttribute("aria-current","page") : b.removeAttribute("aria-current"));
+  if (vista === "mapas") dibujarMapa();
+  if (vista === "diario") pintarDiario();
+  if (vista === "hoy") pintarHoy();
+  window.scrollTo(0, 0);
+}
+$$(".nav button").forEach(b => b.onclick = () => irA(b.dataset.view));
+
+/* ===================== HOJA MODAL ===================== */
+function abrirHoja(html){ $("#hojaCont").innerHTML = html; $("#hoja").classList.add("open"); document.body.style.overflow = "hidden"; }
+function cerrarHoja(){ $("#hoja").classList.remove("open"); document.body.style.overflow = ""; }
+$("#hoja").onclick = e => { if (e.target.id === "hoja") cerrarHoja(); };
+document.addEventListener("keydown", e => { if (e.key === "Escape") cerrarHoja(); });
+
+/* ===================== CONSULTAR ===================== */
+let modo = leer("modo", "adulto");
+function pintarModo(){ $$("[data-modo]").forEach(b => b.setAttribute("aria-pressed", b.dataset.modo === modo)); }
+$$("[data-modo]").forEach(b => b.onclick = () => { modo = b.dataset.modo; guardar("modo", modo); pintarModo(); });
+pintarModo();
+$("#ejemplos").innerHTML = EJEMPLOS.map((e,i) => `<button class="chip" data-i="${i}">${esc(e.c)}</button>`).join("");
+$$("#ejemplos .chip").forEach(b => b.onclick = () => { $("#consulta").value = EJEMPLOS[b.dataset.i].t; $("#consulta").focus(); });
+
+const RIESGO = /(suicid|quitarme la vida|matarme|me quiero morir|no quiero vivir|hacerme da[ñn]o|cortarme|acabar con todo|me pega|me golpea|abus(o|a|aron)|violaci[oó]n|matar a|lo voy a matar)/i;
+
+async function consultar(){
+  const texto = $("#consulta").value.trim();
+  if (texto.length < 10) { toast("Escribe un poco más sobre tu situación"); $("#consulta").focus(); return; }
+  const btn = $("#btnConsultar"); btn.disabled = true; btn.textContent = "Buscando en la Escritura…";
+  $("#resultado").innerHTML = `<p class="estado">Buscando versículos, historias y la mirada de cada tradición…</p>`;
+  let resp = null, demo = false;
+  try {
+    const ctrl = new AbortController(), to = setTimeout(() => ctrl.abort(), 90000);
+    const r = await fetch("/.netlify/functions/consejo", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ consulta:texto, modo }), signal: ctrl.signal });
+    clearTimeout(to);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    resp = await r.json();
+    if (!resp || !Array.isArray(resp.versiculos)) throw new Error("Formato inválido");
+  } catch (e) { console.warn("IA no disponible, se muestra el ejemplo:", e); resp = DEMO; demo = true; }
+  if (RIESGO.test(texto)) resp = { ...resp, crisis:true };
+  const entrada = { id: Date.now(), fecha: new Date().toISOString(), consulta: texto, resp, demo };
+  $("#resultado").innerHTML = htmlRespuesta(resp, demo);
+  conectarRespuesta($("#resultado"), entrada);
+  btn.disabled = false; btn.textContent = "Buscar consejo en las Escrituras";
+  $("#resultado").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+}
+$("#btnConsultar").onclick = consultar;
+
+function htmlCrisis(){
+  return `<div class="crisis" role="alert"><h3>No estás solo. Busca ayuda ahora.</h3>
+  <p>Si estás pensando en hacerte daño o alguien te está lastimando, habla hoy con una persona real. En Colombia:</p>
+  <p style="margin:0"><a href="tel:192">Línea 192, opción 4</a>: salud mental, gratuita<br><a href="tel:106">Línea 106</a>: apoyo emocional<br><a href="tel:155">Línea 155</a>: violencia contra la mujer<br><a href="tel:123">123</a>: emergencias</p></div>`;
+}
+const TRADS = [["catolica","Católica","var(--rub)"],["evangelica","Evangélica","var(--cob)"],["ortodoxa","Ortodoxa","var(--amb)"],["judia","Judía","var(--esm)"]];
+
+function htmlHistoria(h){
+  const lugar = LUGARES[h.lugar];
+  return `<article class="historia">${lamina(h.lamina, h.titulo)}
+    <div class="txt"><h3>${esc(h.titulo)}</h3><p class="ref">${esc(h.ref)}${lugar ? " · " + esc(lugar.n) : ""}</p>
+    <p>${esc(h.resumen)}</p><p class="leccion">${esc(h.leccion)}</p>
+    ${lugar ? `<button class="link" data-mapa-lugar="${esc(h.lugar)}">Ver en el mapa</button>` : ""}</div></article>`;
+}
+
+function htmlRespuesta(r, demo){
+  const tr = r.tradiciones || {}, trads = TRADS.filter(([k]) => tr[k]);
+  return `${r.crisis ? htmlCrisis() : ""}
+  ${demo ? `<p class="aviso">Modo demostración: la IA aún no está conectada, así que ves una respuesta de ejemplo sobre deudas.</p>` : ""}
+  ${r.tema ? `<p class="tema">${esc(r.tema)}</p>` : ""}
+  ${r.titulo ? `<p class="titulo-cap">${esc(r.titulo)}</p>` : `<span class="floron" aria-hidden="true">❦</span>`}
+  <p class="empatia">${esc(r.empatia)}</p>
+  <h2>Lo que dice la Palabra</h2>
+  ${(r.versiculos||[]).map(v => `<figure class="verso"><blockquote>${esc(v.texto)}</blockquote><cite>${esc(v.ref)}</cite><p>${esc(v.explicacion)}</p></figure>`).join("")}
+  ${(r.historias||[]).length ? `<h2>Quienes vivieron algo parecido</h2>${r.historias.map(htmlHistoria).join("")}` : ""}
+  ${trads.length ? `<h2>Cómo lo lee cada tradición</h2>
+    <div class="tabs-trad" role="tablist">${trads.map(([k,n,c],i) => `<button role="tab" style="--c:${c}" data-trad="${k}" aria-selected="${i===0}">${n}</button>`).join("")}</div>
+    <div class="trad-panel" data-panel>${esc(tr[trads[0][0]])}</div>` : ""}
+  ${r.raiz && r.raiz.original ? `<h2>La palabra en su idioma original</h2>
+    <div class="raiz"><span class="orig" lang="${r.raiz.idioma === "griego" ? "grc" : "he"}">${esc(r.raiz.original)}</span>
+    <span class="tr">${esc(r.raiz.transliteracion)} · ${esc(r.raiz.idioma)}</span><p class="sig">${esc(r.raiz.significado)}</p></div>` : ""}
+  ${(r.pasos||[]).length ? `<h2>Qué puedes hacer hoy</h2><ol class="pasos">${r.pasos.map(p => `<li><span>${esc(p)}</span></li>`).join("")}</ol>` : ""}
+  ${r.oracion ? `<h2>Una oración para ti</h2><p class="oracion">${esc(r.oracion)}</p>` : ""}
+  ${(r.plan||[]).length ? `<h2>Plan de lectura de ${r.plan.length} días</h2><ol class="plan">${r.plan.map(p => `<li><strong>${esc(p.lectura)}</strong>: ${esc(p.enfoque)}</li>`).join("")}</ol>` : ""}
+  <div class="acciones">
+    <button class="btn" data-acc="escuchar">Escuchar al abuelo</button>
+    <button class="btn ghost" data-acc="guardar">Guardar en mi diario</button>
+    ${(r.plan||[]).length ? `<button class="btn ghost" data-acc="plan">Empezar plan</button>` : ""}
+    ${(r.versiculos||[]).length ? `<button class="btn ghost" data-acc="compartir">Compartir versículo</button>` : ""}
+  </div>`;
+}
+
+function textoParaLeer(r){
+  return [r.empatia,
+    ...(r.versiculos||[]).map(v => `${v.ref}. ${v.texto}. ${v.explicacion}`),
+    ...(r.historias||[]).map(h => `${h.titulo}. ${h.resumen} ${h.leccion}`),
+    r.oracion ? "Oremos. " + r.oracion : ""].filter(Boolean).join(" ");
+}
+
+function conectarRespuesta(cont, entrada){
+  const r = entrada.resp;
+  cont.querySelectorAll("[data-trad]").forEach(b => b.onclick = () => {
+    cont.querySelectorAll("[data-trad]").forEach(x => x.setAttribute("aria-selected", x === b));
+    cont.querySelector("[data-panel]").textContent = r.tradiciones[b.dataset.trad];
+  });
+  cont.querySelectorAll("[data-mapa-lugar]").forEach(b => b.onclick = () => { cerrarHoja(); verEnMapa(b.dataset.mapaLugar); });
+  const acc = n => cont.querySelector(`[data-acc="${n}"]`);
+  acc("escuchar").onclick = () => hablar(textoParaLeer(r));
+  acc("guardar").onclick = () => { const d = leer("diario", []); if (!d.some(x => x.id === entrada.id)) { d.unshift(entrada); guardar("diario", d.slice(0, 60)); } toast("Guardado en tu diario"); };
+  if (acc("plan")) acc("plan").onclick = () => { guardar("plan", { tema: r.tema || "Mi plan", items: r.plan, hechos: [] }); toast("Plan guardado en Hoy"); };
+  if (acc("compartir")) acc("compartir").onclick = () => compartirImagen(r.versiculos[0].texto, r.versiculos[0].ref);
+}
+
+/* ===================== HISTORIAS ===================== */
+const textoHistoria = h => `${h.t}. ${h.res} ${h.lec}`;
+let temaFiltro = "todas";
+function pintarHistorias(){
+  const temas = ["todas", ...new Set(HISTORIAS.flatMap(h => h.tem))];
+  $("#filtroTemas").innerHTML = temas.map(t => `<button class="chip ${t === temaFiltro ? "on" : ""}" data-t="${esc(t)}">${t === "todas" ? "Todas" : esc(t[0].toUpperCase() + t.slice(1))}</button>`).join("");
+  $$("#filtroTemas .chip").forEach(b => b.onclick = () => { temaFiltro = b.dataset.t; pintarHistorias(); });
+  $("#listaHist").innerHTML = HISTORIAS.filter(h => temaFiltro === "todas" || h.tem.includes(temaFiltro)).map(h => `<button class="historia" data-h="${h.id}">${lamina(h.p, h.t)}
+    <div class="txt"><h3>${esc(h.t)}</h3><p class="ref">${esc(h.ref)}</p><p>${esc(h.res)}</p>
+    <div class="tags">${h.tem.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</div></div></button>`).join("");
+  $$("#listaHist [data-h]").forEach(b => b.onclick = () => abrirHistoria(HISTORIAS.find(h => h.id === b.dataset.h)));
+}
+function abrirHistoria(h){
+  const lugar = h.l && LUGARES[h.l];
+  abrirHoja(`<article class="historia">${lamina(h.p, h.t)}<div class="txt"><h3 style="font-size:1.7rem">${esc(h.t)}</h3>
+    <p class="ref">${esc(h.ref)}${lugar ? " · " + esc(lugar.n) : ""}</p><p>${esc(h.res)}</p><p class="leccion">${esc(h.lec)}</p>
+    <div class="acciones"><button class="btn" id="leerHist">Escuchar al abuelo</button>${lugar ? `<button class="btn ghost" data-mapa-lugar="${h.l}">Ver en el mapa</button>` : ""}</div></div></article>`);
+  $("#leerHist").onclick = () => hablar(textoHistoria(h), "historia-" + h.id);
+  $$("#hojaCont [data-mapa-lugar]").forEach(b => b.onclick = () => { cerrarHoja(); verEnMapa(b.dataset.mapaLugar); });
+}
+pintarHistorias();
+
+/* ===================== MAPAS ===================== */
+const MAPAS = {
+  israel:{lon0:34.1,lon1:36.3,lat0:30.9,lat1:33.45,sx:110,sy:130,flag:"i"},
+  region:{lon0:29,lon1:49,lat0:27,lat1:38,sx:18,sy:21,flag:"r"}
+};
+const GEO = {
+  med:[[20,38],[28,36.8],[30.6,36.85],[32,36.5],[33.5,36.2],[34.6,36.8],[36.1,36.9],[36.1,36.6],[35.78,35.52],[35.87,34.9],[35.83,34.44],[35.64,34.12],[35.48,33.9],[35.37,33.56],[35.2,33.27],[35.1,33.09],[35.07,32.93],[35.05,32.82],[34.96,32.83],[34.93,32.6],[34.89,32.5],[34.85,32.33],[34.75,32.05],[34.63,31.8],[34.55,31.67],[34.44,31.52],[34.2,31.32],[33.8,31.13],[33.1,31.1],[32.3,31.25],[31.9,31.5],[31,31.6],[30.4,31.45],[29.9,31.2],[29,30.9],[20,30.9]],
+  chipre:[[32.3,34.8],[32.9,34.6],[33.6,34.8],[34.1,35],[34.6,35.7],[33.9,35.3],[33,35.35],[32.3,35.1]],
+  rojo:[[32.55,29.97],[32.4,29.6],[32.7,28.9],[33.5,27.9],[33.8,27.2],[34,26],[37,26],[35.8,27.3],[35,28.1],[34.8,28.6],[35,29.4],[35,29.53],[34.9,29.49],[34.6,28.8],[34.4,28.1],[34.25,27.73],[33.8,28.1],[33.2,28.9],[32.7,29.6],[32.6,29.95]],
+  persico:[[48,30.05],[48.7,29.95],[49,29.9],[52,28],[52,26],[49.5,26],[48.8,27.5],[48.2,28.7],[47.9,29.4]],
+  muerto:[[35.48,31.77],[35.58,31.75],[35.6,31.45],[35.52,31.2],[35.45,31.05],[35.38,31.2],[35.4,31.5]],
+  galilea:[[35.55,32.9],[35.65,32.85],[35.64,32.72],[35.57,32.7],[35.52,32.8]],
+  jordan:[[35.62,33.25],[35.61,33.05],[35.6,32.9],null,[35.57,32.71],[35.56,32.5],[35.53,32.2],[35.52,32],[35.55,31.8]],
+  nilo:[[31.2,26],[31,27],[30.8,28],[31.2,29],[31.25,30.05],[30.4,31.45],null,[31.25,30.05],[31.85,31.5]],
+  eufrates:[[38.3,38],[38.1,37.2],[38,36.8],[38.2,36.2],[39,35.9],[40.1,35.3],[40.9,34.5],[41.9,34.3],[43.3,33.4],[44,32.9],[44.4,32.5],[45.2,31.8],[46.3,31],[47.4,31],[48,30.4]],
+  tigris:[[40.6,38],[41.9,37.5],[42.6,37],[43.15,36.35],[43.7,35.2],[44.4,33.35],[45.3,32.6],[46.3,31.8],[47.4,31]]
+};
+const ETIQ = { carmelo:{a:"end",dx:-8}, babilonia:{a:"end",dx:-8}, nebo:{dy:14}, belen:{dy:13}, susa:{a:"end",dx:-8}, ur:{a:"end",dx:-8}, gaza:{dy:13}, tarso:{a:"end",dx:-8} };
+let mapaActual = "israel", lugarSel = null;
+$$('[data-mapa]').forEach(b => b.onclick = () => { mapaActual = b.dataset.mapa; lugarSel = null; dibujarMapa(); });
+
+function dibujarMapa(){
+  $$('[data-mapa]').forEach(b => b.setAttribute("aria-pressed", b.dataset.mapa === mapaActual));
+  const m = MAPAS[mapaActual], W = (m.lon1-m.lon0)*m.sx, H = (m.lat1-m.lat0)*m.sy;
+  const P = ([lon,lat]) => [((lon-m.lon0)*m.sx).toFixed(1), ((m.lat1-lat)*m.sy).toFixed(1)];
+  const poly = (pts, cls) => `<polygon class="${cls}" points="${pts.map(p => P(p).join(",")).join(" ")}"/>`;
+  const linea = pts => { let d = "", nuevo = true; pts.forEach(p => { if (!p) { nuevo = true; return; } d += (nuevo ? "M" : "L") + P(p).join(" "); nuevo = false; }); return `<path class="rio" d="${d}"/>`; };
+  const texto = (lon, lat, t, anchor) => { const [x,y] = P([lon,lat]); return `<text class="mar-nombre" x="${x}" y="${y}" text-anchor="${anchor||"start"}">${t}</text>`; };
+  let s = `<rect class="tierra" width="${W}" height="${H}"/>`;
+  s += poly(GEO.med,"mar") + poly(GEO.chipre,"tierra") + poly(GEO.rojo,"mar") + poly(GEO.persico,"mar") + poly(GEO.muerto,"mar") + poly(GEO.galilea,"mar");
+  s += linea(GEO.jordan) + linea(GEO.nilo) + linea(GEO.eufrates) + linea(GEO.tigris);
+  if (mapaActual === "israel") s += texto(34.15,32.25,"Mar Mediterráneo") + texto(35.62,31.12,"Mar Muerto");
+  else s += texto(29.4,34.2,"Mar Mediterráneo") + texto(35.9,27.3,"Mar Rojo") + texto(48.9,28.2,"Golfo Pérsico","end") + texto(41.2,34.9,"Éufrates");
+  const pts = Object.entries(LUGARES).filter(([,l]) => l[m.flag]).map(([id,l]) => [id, l, ...P([l.lon,l.lat]).map(Number)]);
+  // Capa 1: áreas táctiles amplias; capa 2: puntos y nombres encima, para que ningún área tape un punto vecino
+  pts.forEach(([id,,x,y]) => { s += `<circle data-lugar="${id}" cx="${x}" cy="${y}" r="11" fill="transparent" style="cursor:pointer"/>`; });
+  pts.forEach(([id,l,x,y]) => { const e = ETIQ[id] || {};
+    s += `<g data-lugar="${id}" tabindex="0" role="button" aria-label="${esc(l.n)}" style="cursor:pointer">
+      <circle class="punto ${id===lugarSel?"sel":""}" cx="${x}" cy="${y}" r="5"/>
+      <text x="${x + (e.dx ?? 8)}" y="${y + (e.dy ?? 3)}" text-anchor="${e.a||"start"}">${esc(l.n)}</text></g>`; });
+  const svg = $("#mapa"); svg.setAttribute("viewBox", `0 0 ${W.toFixed(0)} ${H.toFixed(0)}`); svg.innerHTML = s;
+  svg.querySelectorAll("[data-lugar]").forEach(g => { g.onclick = () => elegirLugar(g.dataset.lugar); g.onkeydown = ev => { if (ev.key === "Enter") elegirLugar(g.dataset.lugar); }; });
+  if (lugarSel) pintarLugar(lugarSel); else $("#lugarInfo").innerHTML = `<p class="muted" style="margin:0">Elige un punto del mapa.</p>`;
+}
+function elegirLugar(id){ lugarSel = id; dibujarMapa(); }
+function pintarLugar(id){
+  const l = LUGARES[id], rel = HISTORIAS.filter(h => h.l === id);
+  $("#lugarInfo").innerHTML = `<h3>${esc(l.n)}</h3><ul>${l.ev.map(e => `<li>${esc(e)}</li>`).join("")}</ul>
+    ${rel.length ? `<p style="margin:10px 0 0">${rel.map(h => `<button class="link" data-h="${h.id}">Leer: ${esc(h.t)}</button>`).join("<br>")}</p>` : ""}`;
+  $$("#lugarInfo [data-h]").forEach(b => b.onclick = () => abrirHistoria(HISTORIAS.find(h => h.id === b.dataset.h)));
+}
+function verEnMapa(id){
+  const l = LUGARES[id]; if (!l) return;
+  mapaActual = l.i ? "israel" : "region"; lugarSel = id; irA("mapas");
+  setTimeout(() => $("#lugarInfo").scrollIntoView({ block:"nearest" }), 50);
+}
+
+/* ===================== DIARIO ===================== */
+function pintarDiario(){
+  const d = leer("diario", []);
+  if (!d.length) { $("#listaDiario").innerHTML = `<div class="vacio"><p>Aún no has guardado consultas.</p><button class="btn" onclick="irA('consultar')">Hacer mi primera consulta</button></div>`; return; }
+  $("#listaDiario").innerHTML = d.map(x => `<div class="entrada"><div class="fecha">${new Date(x.fecha).toLocaleDateString("es-CO",{day:"numeric",month:"long",year:"numeric"})}</div>
+    <p class="q">${esc(x.consulta.length > 140 ? x.consulta.slice(0,140) + "…" : x.consulta)}</p>
+    <button class="link" data-ver="${x.id}">Abrir</button> &nbsp; <button class="link" style="color:var(--rub)" data-borrar="${x.id}">Borrar</button></div>`).join("");
+  $$("#listaDiario [data-ver]").forEach(b => b.onclick = () => {
+    const e = d.find(x => x.id == b.dataset.ver);
+    abrirHoja(`<p class="empatia" style="margin-top:6px">${esc(e.consulta)}</p>${htmlRespuesta(e.resp, e.demo)}`);
+    conectarRespuesta($("#hojaCont"), e);
+  });
+  $$("#listaDiario [data-borrar]").forEach(b => b.onclick = () => {
+    if (!confirm("¿Borrar esta consulta del diario?")) return;
+    guardar("diario", d.filter(x => x.id != b.dataset.borrar)); pintarDiario(); toast("Consulta borrada");
+  });
+}
+
+/* ===================== HOY ===================== */
+const diaDelAno = () => Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 864e5);
+const indiceVerso = () => diaDelAno() % VERSOS_DIA.length;
+function versoDelDia(){ return VERSOS_DIA[indiceVerso()]; }
+function pintarHoy(){
+  const v = versoDelDia(); $("#vdiaTexto").textContent = v.t; $("#vdiaRef").textContent = v.r;
+  const h = HISTORIAS[diaDelAno() % HISTORIAS.length]; $("#laminaHoy").innerHTML = lamina(h.p, h.t);
+  const p = leer("plan", null);
+  if (!p) { $("#planHoy").innerHTML = `<p class="soft">Cuando hagas una consulta, toca “Empezar plan” y tus lecturas aparecerán aquí.</p>`; return; }
+  $("#planHoy").innerHTML = `<p class="tema" style="margin-top:0">${esc(p.tema)}</p><ul class="plan-lista">${p.items.map((it,i) => `<li><input type="checkbox" id="pl${i}" ${p.hechos.includes(i) ? "checked" : ""}>
+    <label for="pl${i}" class="${p.hechos.includes(i) ? "hecho" : ""}"><strong>Día ${it.dia}: ${esc(it.lectura)}</strong><br><span class="soft">${esc(it.enfoque)}</span></label></li>`).join("")}</ul>`;
+  p.items.forEach((_,i) => $("#pl"+i).onchange = e => {
+    p.hechos = e.target.checked ? [...new Set([...p.hechos, i])] : p.hechos.filter(x => x !== i);
+    guardar("plan", p); pintarHoy(); if (p.hechos.length === p.items.length) toast("¡Terminaste tu plan!");
+  });
+}
+$("#btnEscucharVdia").onclick = () => { const v = versoDelDia(); hablar(`${v.r}. ${v.t}`, "verso-" + (indiceVerso() + 1)); };
+$("#btnCompartirVdia").onclick = () => { const v = versoDelDia(); compartirImagen(v.t, v.r); };
+
+/* ===================== COMPARTIR COMO IMAGEN (estado de WhatsApp) ===================== */
+async function compartirImagen(texto, ref){
+  try { await Promise.all([document.fonts.load("64px 'IM Fell English'"), document.fonts.load("40px 'IM Fell English SC'")]); } catch (e) {}
+  const c = document.createElement("canvas"); c.width = 1080; c.height = 1920; const x = c.getContext("2d");
+  x.fillStyle = "#EDE3CC"; x.fillRect(0, 0, 1080, 1920);
+  const g = x.createRadialGradient(540, 960, 300, 540, 960, 1100); g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, "rgba(90,60,20,.28)");
+  x.fillStyle = g; x.fillRect(0, 0, 1080, 1920);
+  x.strokeStyle = "#2B2118"; x.lineWidth = 3; x.strokeRect(70, 70, 940, 1780); x.lineWidth = 1.5; x.strokeRect(86, 86, 908, 1748);
+  x.textAlign = "center"; x.fillStyle = "#8C1C13"; x.font = "90px 'IM Fell English', Georgia, serif"; x.fillText("❦", 540, 420);
+  x.fillStyle = "#2B2118"; x.font = "66px 'IM Fell English', Georgia, serif";
+  const palabras = texto.split(" "), lineas = []; let l = "";
+  palabras.forEach(p => { const t = l ? l + " " + p : p; if (x.measureText(t).width > 820) { lineas.push(l); l = p; } else l = t; }); lineas.push(l);
+  let y = 1000 - (lineas.length * 86) / 2 + 40;
+  lineas.forEach(li => { x.fillText(li, 540, y); y += 86; });
+  x.fillStyle = "#8C1C13"; x.font = "46px 'IM Fell English SC', Georgia, serif"; x.fillText(ref, 540, y + 50);
+  x.fillStyle = "rgba(43,33,24,.55)"; x.font = "36px 'IM Fell English SC', Georgia, serif"; x.fillText("La Palabra · consejo bíblico", 540, 1760);
+  c.toBlob(async blob => {
+    const file = new File([blob], "versiculo.png", { type:"image/png" });
+    try { if (navigator.canShare && navigator.canShare({ files:[file] })) { await navigator.share({ files:[file], text:`${texto} (${ref})` }); return; } }
+    catch (e) { if (e.name === "AbortError") return; }
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "versiculo.png"; a.click(); toast("Imagen descargada");
+  }, "image/png");
+}
+
+pintarHoy();
+
+/* ===================== APP INSTALABLE (solo celulares) ===================== */
+if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
+const yaInstalada = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const esIPhone = /iphone|ipad|ipod/i.test(navigator.userAgent);
+let avisoInstalar = null;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); avisoInstalar = e; $("#btnInstalar").hidden = false; });
+window.addEventListener("appinstalled", () => { $("#btnInstalar").hidden = true; toast("La Palabra quedó instalada"); });
+if (!yaInstalada && esIPhone) $("#btnInstalar").hidden = false;
+$("#btnInstalar").onclick = async () => {
+  if (avisoInstalar) { avisoInstalar.prompt(); await avisoInstalar.userChoice; avisoInstalar = null; $("#btnInstalar").hidden = true; return; }
+  abrirHoja(`<h2 style="margin-top:4px">Instalar La Palabra</h2>
+    <ol class="pasos"><li><span>En Safari, toca el botón <strong>Compartir</strong> (el cuadro con la flecha hacia arriba).</span></li>
+    <li><span>Elige <strong>Agregar a inicio</strong>.</span></li><li><span>Toca <strong>Agregar</strong>. La app aparecerá con su ícono entre tus aplicaciones.</span></li></ol>`);
+};
+</script>
+</body>
+</html>

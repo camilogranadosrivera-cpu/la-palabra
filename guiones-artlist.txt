@@ -1,0 +1,91 @@
+GUIONES PARA GRABAR EN ARTLIST CON LA VOZ RURAL — APP "LA PALABRA"
+Pega cada texto en Artlist, genera el audio y descárgalo en MP3 con el nombre exacto indicado.
+Guarda todos los MP3 en una carpeta llamada audio/ junto a index.html.
+
+==== audio/saludo.mp3 ====
+Hijo mío, siéntate un momento conmigo. Lámpara es a mis pies tu palabra, y lumbrera a mi camino.
+
+==== audio/historia-jose.mp3 ====
+José se da a conocer a sus hermanos. Sus propios hermanos lo vendieron como esclavo. Años después, siendo gobernador de Egipto, los tuvo en sus manos cuando llegaron pidiendo comida. No pudo contenerse, lloró a gritos y les dijo: yo soy José, vuestro hermano. Pudo vengarse y no lo hizo: lo que ellos pensaron para mal, Dios lo encaminó para bien (Génesis 50:20).
+
+==== audio/historia-jose-sueno.mp3 ====
+José interpreta el sueño del faraón. El faraón soñó con siete vacas gordas devoradas por siete flacas. José entendió el mensaje: vendrían siete años de abundancia y siete de hambre, y propuso guardar una parte de cada cosecha. La fe también planea y administra. Orar y hacer cuentas no se contradicen.
+
+==== audio/historia-agar.mp3 ====
+Agar en el desierto. Expulsada con su hijo, se quedó sin agua en el desierto. Dejó al muchacho bajo un arbusto y se sentó lejos para no verlo morir, y lloró. Dios oyó la voz del muchacho y le abrió los ojos: había un pozo de agua cerca que ella, en su dolor, no veía.
+
+==== audio/historia-david-saul.mp3 ====
+David perdona la vida a Saúl. Saúl lo perseguía para matarlo y entró solo a la cueva donde David se escondía. Sus hombres le dijeron: este es el día que Dios te prometió. David solo cortó la orilla de su manto, y aun eso le pesó. Dejó el juicio en manos de Dios, y Dios lo levantó a su tiempo.
+
+==== audio/historia-rut.mp3 ====
+Noemí y sus nueras. Noemí lo perdió todo: su esposo y sus dos hijos. Les pidió a sus nueras que volvieran a su tierra. Rut se negó: a dondequiera que tú fueres, iré yo. La lealtad en medio de la pérdida abre caminos que nadie ve. De Rut viene el linaje del rey David.
+
+==== audio/historia-daniel.mp3 ====
+Daniel en el foso de los leones. Sus compañeros de gobierno, por envidia, le tendieron una trampa legal para que lo castigaran por orar a su Dios. Daniel siguió orando como siempre, sin esconderse ni atacar. Dios cerró la boca de los leones.
+
+==== audio/historia-jonas.mp3 ====
+Jonás predica en Nínive. Dios lo mandó a Nínive y él huyó en un barco. Después de la tormenta y del gran pez, al fin fue y predicó, y toda la ciudad se arrepintió. Dios da segundas oportunidades a quien huye, y también a los enemigos que Jonás no quería ver perdonados.
+
+==== audio/historia-pedro.mp3 ====
+Pedro camina sobre el agua. Pedro caminó sobre el mar hacia Jesús mientras lo miraba. Al ver la fuerza del viento tuvo miedo y comenzó a hundirse. Gritó: ¡Señor, sálvame! Y al momento Jesús le tendió la mano. Dudar no te descalifica: pedir ayuda te salva.
+
+==== audio/historia-prodigo.mp3 ====
+El hijo pródigo. Un hijo pidió su herencia en vida, la malgastó y terminó cuidando cerdos. Volvió a casa dispuesto a ser un simple jornalero. El padre lo vio de lejos y corrió a abrazarlo antes de escuchar su discurso. Y el hermano mayor también necesitaba aprender a perdonar.
+
+==== audio/historia-ester.mp3 ====
+Ester desenmascara a Amán. Presentarse ante el rey sin ser llamada podía costarle la vida. Aun así fue, y en el banquete denunció al hombre que planeaba exterminar a su pueblo. Ayunó, pidió que oraran por ella y se atrevió. Quizás estás donde estás para un momento como este (Ester 4:14).
+
+==== audio/historia-absalon.mp3 ====
+David llora por su hijo Absalón. Su hijo se rebeló contra él y murió en la batalla. El rey subió a la sala sobre la puerta y lloró: ¡Hijo mío Absalón, quién me diera morir en tu lugar! La Biblia no esconde el dolor de un padre. Llorar no es falta de fe: David lloró y Dios lo sostuvo.
+
+==== audio/historia-moises.mp3 ====
+Moisés salvado de las aguas. El faraón mandó matar a los niños hebreos. Su madre lo escondió tres meses y luego lo puso en una cesta entre los juncos del Nilo. La hija del faraón lo encontró, y la madre terminó criándolo con paga. Cuando ya no puedes proteger lo que amas, ponlo en manos de Dios.
+
+==== audio/historia-adultera.mp3 ====
+Jesús y la mujer sorprendida en adulterio. La llevaron ante Jesús para apedrearla. Él se inclinó, escribió en la tierra y dijo: el que de vosotros esté sin pecado, arroje contra ella la piedra el primero. Ni yo te condeno: vete, y no peques más. La gracia y el cambio de vida van juntos.
+
+==== audio/historia-tempestad.mp3 ====
+Jesús calma la tempestad. La barca se llenaba de agua y Jesús dormía. Los discípulos lo despertaron gritando: ¿no tienes cuidado que perecemos? Él reprendió al viento y se hizo grande bonanza. Luego les preguntó: ¿por qué estáis así amedrentados?
+
+==== audio/historia-samaritano.mp3 ====
+El buen samaritano. A un hombre lo asaltaron y lo dejaron medio muerto en el camino. Un sacerdote y un levita pasaron de largo. Un extranjero despreciado se detuvo a curarlo. Prójimo es el que se acerca. A veces Dios te ayuda por medio de quien menos esperas.
+
+==== audio/historia-getsemani.mp3 ====
+La agonía en el huerto. La noche antes de morir, Jesús oró con tanta angustia que su sudor era como gotas de sangre que caían hasta la tierra. No se haga mi voluntad, sino la tuya. Hasta Jesús sintió angustia, y un ángel vino del cielo a fortalecerlo.
+
+==== audio/verso-1.mp3 ====
+Salmo 119:105. Lámpara es a mis pies tu palabra, y lumbrera a mi camino.
+
+==== audio/verso-2.mp3 ====
+Salmo 23:1. Jehová es mi pastor; nada me faltará.
+
+==== audio/verso-3.mp3 ====
+Proverbios 3:5. Fíate de Jehová de todo tu corazón, y no estribes en tu prudencia.
+
+==== audio/verso-4.mp3 ====
+Isaías 41:10. No temas, que yo soy contigo; no desmayes, que yo soy tu Dios que te esfuerzo: siempre te ayudaré.
+
+==== audio/verso-5.mp3 ====
+Mateo 11:28. Venid a mí todos los que estáis trabajados y cargados, que yo os haré descansar.
+
+==== audio/verso-6.mp3 ====
+Filipenses 4:13. Todo lo puedo en Cristo que me fortalece.
+
+==== audio/verso-7.mp3 ====
+Jeremías 29:11. Porque yo sé los pensamientos que tengo acerca de vosotros, dice Jehová, pensamientos de paz, y no de mal.
+
+==== audio/verso-8.mp3 ====
+Salmo 34:18. Cercano está Jehová a los quebrantados de corazón; y salvará a los contritos de espíritu.
+
+==== audio/verso-9.mp3 ====
+Josué 1:9. Mira que te mando que te esfuerces y seas valiente: no temas ni desmayes.
+
+==== audio/verso-10.mp3 ====
+Romanos 12:21. No seas vencido de lo malo; mas vence con el bien el mal.
+
+==== audio/verso-11.mp3 ====
+Salmo 30:5. Por la noche durará el lloro, y a la mañana vendrá la alegría.
+
+==== audio/verso-12.mp3 ====
+Salmo 55:22. Echa sobre Jehová tu carga, y él te sustentará.
+
