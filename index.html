@@ -590,7 +590,7 @@ async function pedirConsejo(texto){
     const r = await fetch("/api/consejo", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ consulta:texto, modo }), signal: ctrl.signal });
     if (!r.ok) { let m = "HTTP " + r.status; try { m = (await r.json()).error || m; } catch (e) {} throw new Error(m); }
     const lector = r.body.getReader(), dec = new TextDecoder();
-    let buffer = "", salida = "";
+    let buffer = "", salida = "", corte = "";
     for (;;) {
       const { value, done } = await lector.read(); if (done) break;
       buffer += dec.decode(value, { stream:true });
@@ -598,11 +598,14 @@ async function pedirConsejo(texto){
       for (const l of lineas) {
         if (!l.startsWith("data:")) continue;
         let ev; try { ev = JSON.parse(l.slice(5)); } catch (e) { continue; }
-        if (ev.type === "content_block_delta" && ev.delta && ev.delta.type === "text_delta") salida += ev.delta.text;
+        if (ev.type === "content_block_delta" && ev.delta && ev.delta.type === "input_json_delta") salida += ev.delta.partial_json;
+        else if (ev.type === "content_block_delta" && ev.delta && ev.delta.type === "text_delta") salida += ev.delta.text;
+        else if (ev.type === "message_delta" && ev.delta && ev.delta.stop_reason) corte = ev.delta.stop_reason;
         else if (ev.type === "error") throw new Error((ev.error && ev.error.message) || "Error de la IA");
       }
       const est = $("#resultado .estado"); if (est) est.textContent = `Escribiendo tu respuesta… ${Math.min(99, Math.round(salida.length / 60))}%`;
     }
+    if (corte === "max_tokens") throw new Error("RESPUESTA_INCOMPLETA");
     const limpio = salida.replace(/```json|```/g, "").trim();
     const json = JSON.parse(limpio.slice(limpio.indexOf("{"), limpio.lastIndexOf("}") + 1));
     if (!json || !Array.isArray(json.versiculos)) throw new Error("La IA respondió en un formato inesperado");
@@ -616,6 +619,8 @@ function explicarError(m){
   if (/credit|balance|billing/i.test(m)) return "Tu cuenta de Anthropic no tiene saldo. Carga créditos en console.anthropic.com (Billing).";
   if (/model/i.test(m)) return "El modelo de IA configurado no está disponible: " + m;
   if (/overloaded|529/i.test(m)) return "La IA está muy ocupada en este momento. Intenta de nuevo en un minuto.";
+  if (/RESPUESTA_INCOMPLETA/.test(m)) return "La respuesta salió demasiado larga y se cortó. Toca Intentar de nuevo.";
+  if (/JSON|formato/i.test(m)) return "La respuesta llegó incompleta. Toca Intentar de nuevo.";
   if (/abort/i.test(m)) return "La respuesta tardó demasiado. Revisa tu señal e intenta de nuevo.";
   if (/HTTP 404/.test(m)) return "No se encontró el servicio de la IA. Asegúrate de haber publicado la versión nueva desde GitHub.";
   return "Detalle técnico: " + m;
@@ -628,7 +633,12 @@ async function consultar(){
   $("#resultado").innerHTML = `<p class="estado">Buscando versículos, historias y la mirada de cada tradición…</p>`;
   let resp = null, demo = false;
   try {
-    resp = await pedirConsejo(texto);
+    try { resp = await pedirConsejo(texto); }
+    catch (e1) {
+      if (location.protocol === "file:" || /clave|saldo|x-api-key|credit|ANTHROPIC/i.test(e1.message)) throw e1;
+      const est = $("#resultado .estado"); if (est) est.textContent = "Ajustando la respuesta, un momento más…";
+      resp = await pedirConsejo(texto); // un segundo intento resuelve casi todos los fallos pasajeros
+    }
   } catch (e) {
     if (location.protocol === "file:") { resp = DEMO; demo = true; } // solo al abrir el archivo suelto
     else {

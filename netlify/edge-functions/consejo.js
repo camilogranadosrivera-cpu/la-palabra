@@ -22,23 +22,46 @@ Cómo respondes:
 - Si hay señales de riesgo (suicidio, autolesión, abuso, violencia doméstica, amenaza a otros), pon "crisis": true y en "empatia" invita con claridad a buscar ayuda inmediata con una persona real.
 - Escribe en español neutro latinoamericano.
 
-Responde ÚNICAMENTE con un objeto JSON válido, sin texto antes ni después y sin bloques de código, con esta forma exacta:
-{
- "crisis": false,
- "tema": "Sobre ... (frase corta que nombra el tema)",
- "titulo": "título breve y cálido, como el de un capítulo",
- "empatia": "2 a 4 frases",
- "versiculos": [{"ref":"Libro cap:vers","texto":"texto del versículo","explicacion":"qué significa para esta persona"}],
- "historias": [{"titulo":"","ref":"","resumen":"","leccion":"","lugar":"id de lugar o null","lamina": número o null}],
- "tradiciones": {"catolica":"","evangelica":"","ortodoxa":"","judia":""},
- "raiz": {"original":"palabra en hebreo o griego con su escritura original","transliteracion":"","idioma":"hebreo|griego|arameo","significado":""},
- "pasos": ["acción concreta y práctica"],
- "oracion": "oración breve en primera persona",
- "plan": [{"dia":1,"lectura":"referencia","enfoque":"frase corta"}]
-}
+Entrega SIEMPRE tu respuesta llamando a la herramienta "entregar_consejo", nunca como texto libre.
 Reglas de cantidad: 3 a 5 versículos, 2 o 3 historias, 3 a 5 pasos, plan de 7 días.
 Para "lugar" usa solo uno de estos ids: ${LUGARES}. Si la historia no ocurre en ninguno, usa null.
 Para "lamina": elige de este catálogo de grabados de Gustave Doré el número que corresponda EXACTAMENTE a la historia; si ninguno la representa, usa null (nunca pongas uno que no corresponda): ${LAMINAS}.`;
+
+const txt = d => ({ type: "string", description: d });
+const HERRAMIENTA = {
+  name: "entregar_consejo",
+  description: "Entrega el consejo bíblico completo a la persona.",
+  input_schema: {
+    type: "object",
+    properties: {
+      crisis: { type: "boolean", description: "true si hay señales de riesgo para la persona o para otros" },
+      tema: txt("Sobre ... (frase corta que nombra el tema)"),
+      titulo: txt("Título breve y cálido, como el de un capítulo"),
+      empatia: txt("2 a 4 frases de acogida"),
+      versiculos: { type: "array", items: { type: "object", properties: {
+        ref: txt("Libro cap:vers"), texto: txt("Texto del versículo"), explicacion: txt("Qué significa para esta persona")
+      }, required: ["ref","texto","explicacion"] } },
+      historias: { type: "array", items: { type: "object", properties: {
+        titulo: txt(""), ref: txt(""), resumen: txt(""), leccion: txt(""),
+        lugar: { type: ["string","null"], description: "id de lugar de la lista o null" },
+        lamina: { type: ["integer","null"], description: "número de lámina de Doré o null" }
+      }, required: ["titulo","ref","resumen","leccion"] } },
+      tradiciones: { type: "object", properties: {
+        catolica: txt(""), evangelica: txt(""), ortodoxa: txt(""), judia: txt("")
+      }, required: ["catolica","evangelica","ortodoxa","judia"] },
+      raiz: { type: "object", properties: {
+        original: txt("Palabra en su escritura original"), transliteracion: txt(""),
+        idioma: { type: "string", enum: ["hebreo","griego","arameo"] }, significado: txt("")
+      }, required: ["original","transliteracion","idioma","significado"] },
+      pasos: { type: "array", items: txt("Acción concreta y práctica") },
+      oracion: txt("Oración breve en primera persona"),
+      plan: { type: "array", items: { type: "object", properties: {
+        dia: { type: "integer" }, lectura: txt("Referencia bíblica"), enfoque: txt("Frase corta")
+      }, required: ["dia","lectura","enfoque"] } }
+    },
+    required: ["crisis","tema","titulo","empatia","versiculos","historias","tradiciones","raiz","pasos","oracion","plan"]
+  }
+};
 
 const json = (obj, status = 200) => new Response(JSON.stringify(obj), { status, headers: { "Content-Type": "application/json; charset=utf-8" } });
 
@@ -59,8 +82,10 @@ export default async (req) => {
     headers: { "x-api-key": clave, "anthropic-version": "2023-06-01", "content-type": "application/json" },
     body: JSON.stringify({
       model: Netlify.env.get("ANTHROPIC_MODEL") || MODELO,
-      max_tokens: 4000,
+      max_tokens: 8000,
       stream: true,
+      tools: [HERRAMIENTA],
+      tool_choice: { type: "tool", name: "entregar_consejo" },
       system: SISTEMA,
       messages: [{ role: "user", content: `Modo: ${modo}\nSituación de la persona: ${consulta}` }]
     })
@@ -70,7 +95,7 @@ export default async (req) => {
     try { m = JSON.parse(t).error?.message || t; } catch {}
     return json({ error: m, estado: r.status }, 502);
   }
-  // Se reenvía el flujo de Anthropic tal cual; la app arma el texto a medida que llega
+  // Se reenvía el flujo de Anthropic tal cual; la app arma la respuesta (JSON garantizado por la herramienta)
   return new Response(r.body, { headers: { "Content-Type": "text/event-stream; charset=utf-8", "Cache-Control": "no-cache" } });
 };
 

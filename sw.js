@@ -1,5 +1,5 @@
 // Service worker de La Palabra: la app abre al instante y funciona sin señal (menos la IA y la voz natural)
-const VERSION = "la-palabra-v2";
+const VERSION = "la-palabra-v3";
 const BASE = ["./", "index.html", "manifest.webmanifest", "iconos/icon-192.png", "iconos/icon-512.png"];
 
 self.addEventListener("install", e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(BASE))); self.skipWaiting(); });
